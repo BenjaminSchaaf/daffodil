@@ -1,0 +1,7 @@
+{
+    "name": "dil",
+    "description": "D Imaging Library",
+    "authors": ["Cameron Lonsdale"],
+    "copyright": "Copyright © 2015, Cameron Lonsdale",
+    "license": "GPL-2.0",
+}
