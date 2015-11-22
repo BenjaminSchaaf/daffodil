@@ -30,7 +30,7 @@ Image BMP(ubyte[] data) {
     // sanity checks
     assert(dib.dataSize == fileSize - contentOffset);
     uint rowSize = (dib.bpp * dib.width + 31)/32 * 4;
-    assert(dib.dataSize == row_size * dib.height);
+    assert(dib.dataSize == rowSize * dib.height);
 
     ubyte[] pixelArray = data[contentOffset..$];
 
