@@ -4,4 +4,11 @@
     "authors": ["Cameron Lonsdale"],
     "copyright": "Copyright © 2015, Cameron Lonsdale",
     "license": "GPL-2.0",
+    "configurations": [
+        {
+            "name": "unittest",
+            "sourcePaths": ["source", "test"],
+            "importPaths": ["source", "test"],
+        },
+    ],
 }

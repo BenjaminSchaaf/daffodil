@@ -154,16 +154,3 @@ private auto maskedBitsToColor(ubyte[] data, uint shift, uint[4] masks) {
 
     return Color(color[0], color[1], color[2], color[3]);
 }
-
-unittest {
-    import dil;
-
-    auto image = bmp.open!Pixel24Bpp("test/small.bmp");
-    assert(image.width == 41);
-    assert(image.height == 45);
-    assert(image.bpp == 24);
-    assert(image[10, 10] == Pixel24Bpp(0, 0, 254));
-    assert(image[30, 10] == Pixel24Bpp(0, 254, 0));
-    assert(image[10, 30] == Pixel24Bpp(254, 0, 0));
-    assert(image[30, 30] == Pixel24Bpp(254, 254, 254));
-}

@@ -43,7 +43,6 @@ private mixin template PixelCommon() {
     }
 }
 
-
 /**
  * RGB Pixel, with each RGB field being a minimum of rgbSize bits.
  */
