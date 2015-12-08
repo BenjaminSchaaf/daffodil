@@ -1,5 +1,6 @@
 module dil.color;
 
+import std.math;
 import std.format;
 
 /**
@@ -8,19 +9,48 @@ import std.format;
  * Used by DIL for conversion between formats, especially external ones.
  */
 struct Color {
-    real red   = 0;
-    real green = 0;
-    real blue  = 0;
-    real alpha = 1;
+    alias color_t = real;
 
-    this(real r, real g, real b, real a) {
-        red   = r;
-        green = g;
-        blue  = b;
-        alpha = a;
+    private color_t[4] colors = [0, 0, 0, 1];
+
+    // Make sure a color never has any nan values
+    invariant {
+        foreach (color; colors) {
+            assert(!isNaN(color));
+        }
+    }
+
+    /// Construct a new color given rgb[a] values.
+    this(color_t r, color_t g, color_t b) {
+        this(r, g, b, 1);
+    }
+    /// ditto
+    this(color_t r, color_t g, color_t b, color_t a) {
+        colors = [r, g, b, a];
+    }
+    /// ditto
+    this(color_t[3] c) {
+        colors[0..3] = c;
+    }
+    /// ditto
+    this(color_t[4] c) {
+        colors = c;
+    }
+
+    private ref inout(color_t) prop(size_t i)() inout {
+        return colors[i];
+    }
+
+    alias red   = prop!0;
+    alias green = prop!1;
+    alias blue  = prop!2;
+    alias alpha = prop!3;
+
+    ref inout(color_t) opIndex(size_t i) inout {
+        return colors[i];
     }
 
     string toString() {
-        return format("(%.2f, %.2f, %.2f, %.2f)", red, green, blue, alpha);
+        return format("Color(%.2f, %.2f, %.2f, %.2f)", red, green, blue, alpha);
     }
 }
