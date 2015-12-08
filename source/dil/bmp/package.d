@@ -147,10 +147,12 @@ private auto maskedBitsToColor(ubyte[] data, uint shift, uint[4] masks) {
     }
 
     // Read integer values into reals
-    real[4] color;
+    Color color;
     foreach (i; 0..4) {
-        color[i] = colorData[i] / cast(real)(1 << offsets[i]);
+        // Only if any value was read, otherwise use the color's default
+        if (offsets[i] > 0) {
+            color[i] = colorData[i] / cast(real)((1 << offsets[i]) - 1);
+        }
     }
-
-    return Color(color[0], color[1], color[2], color[3]);
+    return color;
 }
