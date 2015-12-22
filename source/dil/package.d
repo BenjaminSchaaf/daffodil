@@ -2,6 +2,7 @@ module dil;
 
 public {
     import dil.image;
+    import dil.color;
     import dil.pixels;
 
     // Image Formats

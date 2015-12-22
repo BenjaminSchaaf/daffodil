@@ -9,10 +9,9 @@ import std.traits;
 import std.bitmanip;
 import std.typecons;
 
+import dil;
 import dil.misc;
-import dil.color;
-import dil.image;
-import dil.pixels;
+import dil.util.errors;
 import dil.util.headers;
 
 import dil.bmp.headers;
@@ -41,8 +40,8 @@ private enum DEFAULT_MASKS = [
  * Attempts to open an image as a BMP file given a pixel format.
  * Returns: A Image object of the given pixel format.
  */
-Image!PixelFmt open(PixelFmt)(ubyte[] data) {
-    assert(isBMP(data));
+auto open(PixelFmt)(ubyte[] data) {
+    enforce!InvalidImageType(isBMP(data), "Data does not contain a bmp image.");
     size_t offset = 2;
 
     auto bmpHeader = parseHeader!BmpHeader(data, offset);
@@ -55,32 +54,38 @@ Image!PixelFmt open(PixelFmt)(ubyte[] data) {
         }
     }
 
-    // Sanity Checks
-    assert(version_ > DibVersion.CORE || dibHeader.bitCount < 16);
-    assert(dibHeader.planes == 1);
-    assert(dibHeader.compression == CompressionMethod.RGB || dibHeader.dataSize > 0);
-    assert(dibHeader.width > 0);
-    assert(dibHeader.height != 0); // Height may be negative
+    alias checkValid = enforce!(InvalidHeader, bool);
 
-    // Compressions methods are not yet supported
-    assert(dibHeader.compression == CompressionMethod.RGB);
+    // Check that the header is valid
+    checkValid(version_ > DibVersion.CORE || dibHeader.bitCount < 16,
+               "Old BMP image header does not support bpp > 8");
+    checkValid(dibHeader.planes == 1, "BMP image can only have one color plane.");
+    checkValid(dibHeader.compression == CompressionMethod.RGB || dibHeader.dataSize > 0,
+               "Invalid data size for compression method");
+    checkValid(dibHeader.width > 0, "BMP image width must be positive");
+    checkValid(dibHeader.height != 0, "BMP image height must not be 0");
 
-    // V5 has a ICC color profile, not yet supported
-    assert(version_ != DibVersion.V5);
-
-    // Color tables are not yet supported
-    assert(dibHeader.colorsUsed == 0);
-    assert(dibHeader.bitCount > 8);
-
-    // Sanity checks
-    assert(dibHeader.dataSize == bmpHeader.size - bmpHeader.contentOffset);
+    checkValid(dibHeader.dataSize == bmpHeader.size - bmpHeader.contentOffset,
+               "BMP header's image size does not match DIB header's");
     uint rowSize = (dibHeader.bitCount * dibHeader.width + 31)/32 * 4;
     uint columnSize = rowSize * dibHeader.height;
-    assert(dibHeader.dataSize == columnSize);
+    checkValid(dibHeader.dataSize == columnSize,
+               "BMP data size does not match image dimensions");
+
+    // Compressions methods are not yet supported
+    enforce!NotSupported(dibHeader.compression == CompressionMethod.RGB);
+
+    // V5 has a ICC color profile, not yet supported
+    enforce!NotSupported(version_ != DibVersion.V5);
+
+    // Color tables are not yet supported
+    enforce!NotSupported(dibHeader.colorsUsed == 0);
+    enforce!NotSupported(dibHeader.bitCount > 8);
 
     // Default RGB masks, as early versions didn't have them
     if (version_ <= DibVersion.INFO) {
-        assert(dibHeader.bitCount in DEFAULT_MASKS);
+        checkValid((dibHeader.bitCount in DEFAULT_MASKS) != null,
+                   "BMP header uses non-standard bpp without color masks");
         auto mask = DEFAULT_MASKS[dibHeader.bitCount];
         dibHeader.redMask   = mask[0];
         dibHeader.greenMask = mask[1];
