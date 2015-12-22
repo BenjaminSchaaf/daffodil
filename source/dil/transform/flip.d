@@ -10,20 +10,22 @@ import dil.image;
  */
 void flip(string axis, PixelFmt)(Image!PixelFmt image) {
     static if (canFind(axis, 'x')) {
-        foreach (y; 0..image.height)
-                foreach (x; 0..image.width/2) {
-            auto temp = image[$ - x - 1, y];
-            image[$ - x - 1, y] = image[x, y];
-            image[x, y] = temp;
+        foreach (y; 0..image.height) {
+            foreach (x; 0..image.width/2) {
+                auto temp = image[$ - x - 1, y];
+                image[$ - x - 1, y] = image[x, y];
+                image[x, y] = temp;
+            }
         }
     }
 
     static if (canFind(axis, 'y')) {
-        foreach (x; 0..image.width)
-                foreach(y; 0..image.height/2) {
-            auto temp = image[x, $ - y - 1];
-            image[x, $ - y - 1] = image[x, y];
-            image[x, y] = temp;
+        foreach (x; 0..image.width) {
+            foreach(y; 0..image.height/2) {
+                auto temp = image[x, $ - y - 1];
+                image[x, $ - y - 1] = image[x, y];
+                image[x, y] = temp;
+            }
         }
     }
 }
