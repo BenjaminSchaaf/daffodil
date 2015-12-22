@@ -5,9 +5,12 @@ public {
     import dil.color;
     import dil.pixels;
 
-    // Image Formats
     static {
+        // Image Formats
         import bmp = dil.bmp;
+
+        // Submodules
+        import transform = dil.transform;
     }
 }
 
@@ -20,7 +23,7 @@ import dil.misc;
  */
 auto open(PixelFmt)(ubyte[] data) {
     if (bmp.isBMP(data)) {
-        return bmp.BMP(data);
+        return bmp.open!PixelFmt(data);
     }
     assert(0);
 }

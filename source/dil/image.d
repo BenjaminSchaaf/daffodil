@@ -10,32 +10,37 @@ import dil.pixels;
  * generic transformations and manipulations using other interfaces.
  */
 class Image(PixelFmt) {
-    private PixelFmt[][] raster;
+    private size_t[2] _size;
+    private PixelFmt[] raster;
 
     /**
      * Create an empty Image given a width and a height.
      * Pixels default to `init`
      */
     this(size_t width, size_t height) {
-        raster.length = height;
-        foreach (ref column; raster) {
-            column.length = width;
-        }
+        _size = [width, height];
+        raster.length = width * height;
+    }
+
+    // Used for creating copies
+    private this(size_t[2] _size, PixelFmt[] raster) {
+        this._size = _size;
+        this.raster = raster;
     }
 
     /**
      * Get the width and height of the Image.
      */
-    @property size_t width() { return raster[0].length; }
-    @property size_t height() { return raster.length; } /// Ditto
-    @property auto size() { return tuple(width, height); } /// Ditto
-    auto opDollar(size_t pos)() { return size[pos]; } /// Ditto
+    @property size_t width() { return _size[0]; }
+    @property size_t height() { return _size[1]; } /// Ditto
+    @property auto size() { return _size; } /// Ditto
+    auto opDollar(size_t pos)() { return _size[pos]; } /// Ditto
 
     unittest {
         auto image = new Image!Pixel24Bpp(123, 234);
         assert(image.width == 123);
         assert(image.height == 234);
-        assert(image.size == tuple(123, 234));
+        assert(image.size == [123, 234]);
         assert(image.opDollar!0 == 123);
         assert(image.opDollar!1 == 234);
     }
@@ -55,11 +60,11 @@ class Image(PixelFmt) {
      * Get a pixel of the given pixel format at a location on the image.
      */
     PixelFmt opIndex(size_t x, size_t y) {
-        return raster[y][x];
+        return raster[x + y * width];
     }
     /// Ditto
     PixelFmt opIndexAssign(PixelFmt pixel, size_t x, size_t y) {
-        return raster[y][x] = pixel;
+        return raster[x + y * width] = pixel;
     }
 
     /**
@@ -67,6 +72,10 @@ class Image(PixelFmt) {
      */
     Image!Fmt convert(Fmt)() {
         //TODO
+    }
+
+    @property auto dup() {
+        return new Image!PixelFmt(_size, raster.dup);
     }
 
     override string toString() {
