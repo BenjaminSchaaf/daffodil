@@ -21,11 +21,7 @@ struct Color {
     }
 
     /// Construct a new color given rgb[a] values.
-    this(color_t r, color_t g, color_t b) {
-        this(r, g, b, 1);
-    }
-    /// ditto
-    this(color_t r, color_t g, color_t b, color_t a) {
+    this(color_t r, color_t g, color_t b, color_t a = 1) {
         colors = [r, g, b, a];
     }
     /// ditto
