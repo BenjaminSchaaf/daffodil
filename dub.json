@@ -6,9 +6,19 @@
     "license": "GPL-2.0",
     "configurations": [
         {
+            "name": "library",
+        },
+        {
             "name": "unittest",
             "sourcePaths": ["source", "test"],
             "importPaths": ["source", "test"],
+        },
+        {
+            "name": "docs",
+            "targetType": "none",
+            "preGenerateCommands": [
+                "sphinx-build -E -b html docs build/html",
+            ],
         },
     ],
 }
