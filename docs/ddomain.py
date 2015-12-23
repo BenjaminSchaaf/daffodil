@@ -68,7 +68,7 @@ class DObject(ObjectDescription):
         if 'noindex' not in self.options:
             env.domaindata['d']['objects'][fullname] = (env.docname, self.get_objtype())
 
-        return super().run()
+        return ObjectDescription.run(self)
 
     def get_fullname(self, name):
         temp_data = self.state.document.settings.env.temp_data
@@ -85,7 +85,7 @@ class DObject(ObjectDescription):
 
 class DClass(DObject):
     def run(self):
-        ret = super().run()
+        ret = DObject.run(self)
 
         env = self.state.document.settings.env
         env.temp_data['d:scope'] += '.' + self.name
@@ -111,7 +111,7 @@ class DFunction(DObject):
 
 class DXRefRole(XRefRole):
     def __init__(self, target_type):
-        super().__init__()
+        XRefRole.__init__(self)
 
         self.target_type = target_type
 
@@ -149,7 +149,8 @@ class DDomain(Domain):
         'objects': {},  # fullname -> docname, type
     }
 
-    def resolve_xref_names(): pass
+    def resolve_xref_names():
+        pass
 
     def resolve_xref(self, env, fromdocname, builder,
                      type, target, node, contnode):
