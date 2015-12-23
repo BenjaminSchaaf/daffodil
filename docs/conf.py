@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'DIL'
-copyright = '2015, Cameron Lonsdale'
+copyright = '2015, Cameron Lonsdale, Benjamin Schaaf'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
