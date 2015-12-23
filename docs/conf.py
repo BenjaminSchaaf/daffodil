@@ -31,6 +31,7 @@ sys.path.append(os.path.abspath('.'))
 # ones.
 extensions = [
     'sphinx.ext.todo',
+    'ddomain',
 ]
 
 highlight_language = 'd'
