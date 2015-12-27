@@ -1,7 +1,10 @@
 module dil.color;
 
 import std.math;
+import std.range;
 import std.format;
+import std.array;
+import std.algorithm;
 
 /**
  * RGBA floating point Color representation.
@@ -46,7 +49,20 @@ struct Color {
         return colors[i];
     }
 
-    string toString() {
+    /**
+     * Standard vector color operations
+     */
+    auto opBinary(string op, T)(T rhs) const {
+        static if (op == "*") return Color(red * rhs, green * rhs, blue * rhs, alpha * rhs);
+        else static if (op == "+") return Color(zip(colors[], rhs.colors[]).map!(a => a[0] + a[1]).array[0..4]);
+        else static assert(0, "Operator "~op~" not implemented");
+    }
+    /// ditto
+    auto opBinaryRight(string op, T)(T rhs) const {
+        return opBinary!op(rhs);
+    }
+
+    string toString() const {
         return format("Color(%.2f, %.2f, %.2f, %.2f)", red, green, blue, alpha);
     }
 }

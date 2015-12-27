@@ -2,6 +2,7 @@ module dil.image;
 
 import std.typecons;
 
+import dil.color;
 import dil.pixels;
 
 /**
@@ -31,10 +32,10 @@ class Image(PixelFmt) {
     /**
      * Get the width and height of the Image.
      */
-    @property size_t width() { return _size[0]; }
-    @property size_t height() { return _size[1]; } /// Ditto
-    @property auto size() { return _size; } /// Ditto
-    auto opDollar(size_t pos)() { return _size[pos]; } /// Ditto
+    @property size_t width() const { return _size[0]; }
+    @property size_t height() const { return _size[1]; } /// Ditto
+    @property auto size() const { return _size; } /// Ditto
+    auto opDollar(size_t pos)() const { return _size[pos]; } /// Ditto
 
     unittest {
         auto image = new Image!Pixel24Bpp(123, 234);
@@ -59,26 +60,30 @@ class Image(PixelFmt) {
     /**
      * Get a pixel of the given pixel format at a location on the image.
      */
-    PixelFmt opIndex(size_t x, size_t y) {
+    PixelFmt opIndex(size_t x, size_t y) const {
         return raster[x + y * width];
     }
     /// Ditto
     PixelFmt opIndexAssign(PixelFmt pixel, size_t x, size_t y) {
         return raster[x + y * width] = pixel;
     }
+    /// Ditto
+    PixelFmt opIndexAssign(Color color, size_t x, size_t y) {
+        return opIndexAssign(PixelFmt(color), x, y);
+    }
 
     /**
      * Copies the entire image into a new image of a new specified pixel format.
      */
-    Image!Fmt convert(Fmt)() {
+    Image!Fmt convert(Fmt)() const {
         //TODO
     }
 
-    @property auto dup() {
+    @property auto dup() const {
         return new Image!PixelFmt(_size, raster.dup);
     }
 
-    override string toString() {
+    override string toString() const {
         import std.format;
         return format("%s", raster);
     }
