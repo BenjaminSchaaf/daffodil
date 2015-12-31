@@ -10,6 +10,7 @@ public {
         import bmp = dil.bmp;
 
         // Submodules
+        import filter = dil.filter;
         import transform = dil.transform;
     }
 }

@@ -1,6 +1,5 @@
 module dil.transform.flip;
 
-import std.range;
 import std.algorithm;
 
 import dil.image;
@@ -30,7 +29,7 @@ void flip(string axis, PixelFmt)(Image!PixelFmt image) {
     }
 }
 /// Ditto
-auto flipped(string axis, PixelFmt)(Image!PixelFmt image) {
+auto flipped(string axis, PixelFmt)(const Image!PixelFmt image) {
     auto output = image.dup;
     output.flip!axis();
     return output;
