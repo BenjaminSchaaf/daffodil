@@ -4,6 +4,15 @@ D Imaging Library: Image processing in D, a library inspired by
 [Pillow](https://python-pillow.github.io/). Unlike other libraries, the internal storage
 format is not predefined and can instead be anything from 8Bpp to 1024Bpp+.
 
+## Goals
+
+- Simple, Extensible API
+- Controllable internals with suitable defaults
+- Wide format support with extensive testing
+- High performance
+- Support a variety of filters and transformations
+- Thread Safety (pending)
+
 ## Example
 
 ``` D
