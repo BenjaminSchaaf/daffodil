@@ -4,6 +4,7 @@ import std.math;
 
 import dil.image;
 import dil.filter;
+import dil.util.test;
 
 /**
  * Evaluate the gaussian/normal distribution for a given x, standard deviation and mean.
@@ -12,7 +13,7 @@ real gaussianDistribution(real x, real stDev = 1, real mean = 0) {
     return 1/(stDev * sqrt(2 * PI))* E.pow(-pow(x - mean, 2)/(2 * pow(stDev, 2)));
 }
 
-unittest {
+mixin test!(gaussianDistribution, "gaussian distribution", {
     static void assertEq(real a, real b) {
         return assert(approxEqual(a, b));
     }
@@ -34,7 +35,7 @@ unittest {
     assertEq(gaussianDistribution(0, 2, 2), 0.120985);
     assertEq(gaussianDistribution(2, 2, 2), 0.199471);
     assertEq(gaussianDistribution(4, 2, 2), 0.120985);
-}
+});
 
 /**
  * Create a 1D matrix of a discrete gaussian distribution with a given
@@ -55,12 +56,12 @@ real[] gaussianMatrix(real stDev = 1, real maxDev = 3) {
     return ret;
 }
 
-unittest {
+mixin test!(gaussianMatrix, "gaussian matrix", {
     const matrix = [0.004432, 0.053991, 0.241971, 0.398942, 0.241971, 0.053991, 0.004432];
     assert(approxEqual(gaussianMatrix(), matrix));
 
     assert(gaussianMatrix(10).length == 61);
-}
+});
 
 /**
  * Convenience method for applying gaussian blur.
@@ -70,7 +71,7 @@ auto gaussianBlurred(string axis = "xy", PixelFmt)(const Image!PixelFmt image, r
     return image.convolved!axis(gaussianMatrix(stDev, maxDev));
 }
 
-unittest {
+mixin test!(gaussianBlurred, "gaussian blur", {
     import dil;
 
     auto image = new Image!Pixel24Bpp(2, 2);
@@ -84,4 +85,4 @@ unittest {
     assert(blurred[0, 1] == Pixel24Bpp(135,  119, 126));
     assert(blurred[1, 0] == Pixel24Bpp( 119, 135, 126));
     assert(blurred[1, 1] == Pixel24Bpp( 119,  119, 127));
-}
+});

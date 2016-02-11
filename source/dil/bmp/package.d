@@ -17,6 +17,7 @@ import dil.util.data;
 import dil.util.range;
 import dil.util.errors;
 import dil.util.headers;
+import dil.util.test;
 
 import dil.bmp.headers;
 
