@@ -2,8 +2,9 @@ module dil.image;
 
 import std.typecons;
 
-import dil.color;
-import dil.pixels;
+import dil;
+import dil.util.test;
+import dil.util.range;
 
 /**
  * Generic Image class for a given pixel format.
@@ -23,6 +24,17 @@ class Image(PixelFmt) {
         raster.length = width * height;
     }
 
+    /**
+     * Documentation
+     */
+    this(R)(R range) if (isImageRange!R && is(ElementType!R == Pixel)) {
+        this(range.width, range.height);
+
+        foreach (pixel; range) {
+            this[pixel.x, pixel.y] = PixelFmt(pixel.color);
+        }
+    }
+
     // Used for creating copies
     private this(size_t[2] _size, PixelFmt[] raster) {
         this._size = _size;
@@ -34,7 +46,7 @@ class Image(PixelFmt) {
      */
     @property size_t width() const { return _size[0]; }
     @property size_t height() const { return _size[1]; } /// Ditto
-    @property auto size() const { return _size; } /// Ditto
+    @property size_t[2] size() const { return _size; } /// Ditto
     auto opDollar(size_t pos)() const { return _size[pos]; } /// Ditto
 
     unittest {
