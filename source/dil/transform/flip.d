@@ -3,6 +3,7 @@ module dil.transform.flip;
 import std.algorithm;
 
 import dil.image;
+import dil.util.test;
 
 /**
  * Flips a image along either the x, y or both axis.
@@ -35,7 +36,7 @@ auto flipped(string axis, PixelFmt)(const Image!PixelFmt image) {
     return output;
 }
 
-unittest {
+mixin test!(flip, "flip transformation", {
     import dil;
 
     auto image = new Image!Pixel24Bpp(2, 2);
@@ -61,4 +62,4 @@ unittest {
     assert(image[0, 1] == Pixel24Bpp(255,   0,   0));
     assert(image[1, 0] == Pixel24Bpp(  0, 255,   0));
     assert(image[1, 1] == Pixel24Bpp(  0,   0, 255));
-}
+});

@@ -3,9 +3,14 @@
  */
 module dil.util.headers;
 
+import std.range;
+import std.array;
 import std.meta;
 import std.traits;
 import std.bitmanip;
+import std.algorithm;
+
+import dil.util.test;
 
 /**
  * Attribute signifying the endianess of a field or type
@@ -41,42 +46,51 @@ template convertable(T) {
  * Given a type and endianess, convert a ubyte[] to that type.
  * Does not support any dynamically sized types or non-standard alignments
  */
-T parseHeader(T, Endianess e = Endianess.little)(ubyte[] data, ref size_t offset) if (convertable!T) {
+T parseHeader(T, Endianess e = Endianess.little, R)(R data) if (convertable!T &&
+                                                                isInputRange!R &&
+                                                                is(ElementType!R == ubyte)) {
     static if (isAggregateType!T) {
         T value;
 
         foreach (field; FieldNameTuple!T) {
-            auto member = mixin("value."~field);
-            mixin("value."~field) = parseHeader!(typeof(member), endianess!(mixin("value."~field), e))(data, offset);
+            enum member = "value."~field;
+            enum endian = endianess!(mixin(member), e);
+            mixin(member~" = parseHeader!(typeof("~member~"), endian)(data);");
         }
         return value;
     } else {
-        data = data[offset..$];
-        offset += T.sizeof;
+        ubyte[T.sizeof] fieldData = data.takeExactly(T.sizeof).array[0..T.sizeof];
 
-        static if (e == Endianess.little) {
-            return littleEndianToNative!T(data[0..T.sizeof]);
+        static if (e is Endianess.little) {
+            return littleEndianToNative!T(fieldData);
         } else {
-            return bigEndianToNative!T(data[0..T.sizeof]);
+            return bigEndianToNative!T(fieldData);
         }
     }
 }
 
-unittest {
+mixin test!(parseHeader, "Able to parse headers", {
     static struct Data {
         ushort field1;
         @(Endianess.little)
         ushort field2;
     }
 
-    ubyte[4] data = [0xDE, 0xAD, 0xAD, 0xDE];
+    ubyte[] data = [0xDE, 0xAD, 0xAD, 0xDE];
 
-    size_t offset = 0;
-    Data d = parseHeader!(Data, Endianess.big)(data, offset);
-    assert(offset == 4);
+    class Iter {
+        ubyte[] _range;
+        this(ubyte[] d) { _range = d; }
+        void popFront() {
+            _range = _range[1..$]; }
+        @property bool empty() { return _range.length == 0; }
+        @property ubyte front() { return _range[0]; }
+    }
+
+    Data d = parseHeader!(Data, Endianess.big)(new Iter(data));
     assert(d.field1 == 0xDEAD);
     assert(d.field2 == 0xDEAD);
-}
+});
 
 /**
  * A mixin template that adds by-field casting.
