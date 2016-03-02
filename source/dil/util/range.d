@@ -22,6 +22,7 @@ struct BufferRange(R) if (isInputRange!R) {
 
     this(R range) {
         this.range = range;
+        growBuffer();
     }
 
     private this(size_t location, E[] buffer, R range) {
@@ -30,23 +31,27 @@ struct BufferRange(R) if (isInputRange!R) {
         this.range = range;
     }
 
+    private void growBuffer() {
+        buffer ~= range.front();
+        range.popFront();
+    }
+
     @property bool empty() {
-        if (location < buffer.length) {
+        if (location + 1 < buffer.length) {
             return false;
         }
-        return buffer.empty;
+        return range.empty;
     }
 
     @property E front() {
-        while (location + 1 > buffer.length) {
-            buffer ~= range.front();
-            range.popFront();
-        }
         return buffer[location];
     }
 
     void popFront() {
         location++;
+        if (location == buffer.length && !range.empty) {
+            growBuffer();
+        }
     }
 
     @property auto save() {
