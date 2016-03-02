@@ -24,3 +24,6 @@ mixin classException!("InvalidImageType", ImageException);
 
 /// Exception thrown when a image has unsupported features.
 mixin classException!("NotSupported", ImageException);
+
+/// Exception thrown when the end of a file is reached before all expected data was read
+mixin classException!("UnexpectedEndOfData", ImageException);

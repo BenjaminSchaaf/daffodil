@@ -11,6 +11,7 @@ import std.algorithm;
 
 import dil;
 import dil.util.range;
+import dil.util.errors;
 
 private const FILE_CHUNK_SIZE = 4096;
 
@@ -73,8 +74,13 @@ ImageRange!Pixel makedRGBRasterLoad(R, T)(R data,
     return Range(data).imageRangeObject;
 }
 
-Pixel maskedRGBLoad(R, T)(R range, T[4] mask, size_t bpp) {
-    auto data = range.takeExactly(bpp / 8);
-    import std.stdio;writeln(data);
-    return Pixel.init;
+Color maskedRGBLoad(R, T)(R range, T[4] mask, size_t bpp) {
+    auto data = range.take(bpp / 8).array;
+    enforce!UnexpectedEndOfData(data.length == bpp / 8);
+
+    // TODO: Actually implement this, ie. no special case
+    enforce!NotSupported(bpp / 8 == 3);
+    auto color = Color(data[2] / 255f, data[1] / 255f, data[0] / 255f);
+
+    return color;
 }
