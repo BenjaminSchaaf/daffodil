@@ -6,9 +6,13 @@ __dummy.html
 *.o
 *.a
 *.obj
+dil
 
 # Sphinx/Python
 build/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# unit-threaded
+bin/

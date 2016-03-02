@@ -17,7 +17,6 @@ import dil.util.data;
 import dil.util.range;
 import dil.util.errors;
 import dil.util.headers;
-import dil.util.test;
 
 import dil.bmp.headers;
 
@@ -47,11 +46,12 @@ bool check(T : Loadeable)(T loadeable) {
     return check(dataLoad(loadeable));
 }
 
-mixin test!(check, "BMP file format check", {
+@("BMP file format check")
+unittest {
     assert( check(cast(ubyte[])[0x42, 0x4D, 0x32, 0x7D, 0xFA, 0x9E]));
     assert(!check(cast(ubyte[])[0x43, 0x4D, 0x32, 0x7D, 0xFA, 0x9E]));
     assert(!check(cast(ubyte[])[0x42, 0x4C, 0x32, 0x7D, 0xFA, 0x9E]));
-});
+}
 
 /**
  * Documentation

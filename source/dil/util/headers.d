@@ -10,8 +10,6 @@ import std.traits;
 import std.bitmanip;
 import std.algorithm;
 
-import dil.util.test;
-
 /**
  * Attribute signifying the endianess of a field or type
  */
@@ -69,7 +67,8 @@ T parseHeader(T, Endianess e = Endianess.little, R)(R data) if (convertable!T &&
     }
 }
 
-mixin test!(parseHeader, "Able to parse headers", {
+@("Able to parse headers")
+unittest {
     static struct Data {
         ushort field1;
         @(Endianess.little)
@@ -90,7 +89,7 @@ mixin test!(parseHeader, "Able to parse headers", {
     Data d = parseHeader!(Data, Endianess.big)(new Iter(data));
     assert(d.field1 == 0xDEAD);
     assert(d.field2 == 0xDEAD);
-});
+}
 
 /**
  * A mixin template that adds by-field casting.
