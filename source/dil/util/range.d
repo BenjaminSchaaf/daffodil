@@ -64,16 +64,26 @@ auto bufferRange(R)(R range) {
 @("buffer range")
 unittest {
     auto r1 = bufferRange("foobar");
-    auto r2 = r1.save;
 
     assert(r1.front == 'f');
-    assert(r2.front == 'f');
+    r1.popFront();
+    assert(r1.front == 'o');
+    assert(r1.front == 'o');
+    r1.popFront();
+    assert(r1.front == 'o');
+
+    auto r2 = r1.save;
+    r1.popFront();
+    assert(r1.front == 'b');
+    assert(r2.front == 'o');
+    r2.popFront();
+    assert(r1.front == 'b');
+    assert(r2.front == 'b');
 }
 
 template isImageRange(R) {
     enum bool isImageRange = isInputRange!R && isSized!R;
 }
-
 
 template isSized(R) {
     enum bool isSized = is(typeof(
