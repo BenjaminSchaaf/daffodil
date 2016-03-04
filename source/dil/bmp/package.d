@@ -153,6 +153,6 @@ auto loadImage(R)(R data, MetaData meta) if (isInputRange!R &&
     uint[4] mask = [dibHeader.redMask, dibHeader.greenMask,
                     dibHeader.blueMask, dibHeader.alphaMask];
 
-    return makedRGBRasterLoad(data, mask, dibHeader.bitCount,
-                              dibHeader.width, dibHeader.height, 4);
+    return maskedRGBRasterLoad(data, mask, dibHeader.bitCount,
+                               dibHeader.width, -dibHeader.height, 4);
 }
