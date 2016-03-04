@@ -6,8 +6,6 @@ module dil.util.range;
 import std.traits;
 public import std.range;
 
-import dil.util.test;
-
 /**
  * Forward Range that wraps a Input Range with a buffer to provide the save primitive.
  */
@@ -63,13 +61,14 @@ auto bufferRange(R)(R range) {
     return BufferRange!R(range);
 }
 
-mixin test!(bufferRange, "buffer range", {
+@("buffer range")
+unittest {
     auto r1 = bufferRange("foobar");
     auto r2 = r1.save;
 
     assert(r1.front == 'f');
     assert(r2.front == 'f');
-});
+}
 
 template isImageRange(R) {
     enum bool isImageRange = isInputRange!R && isSized!R;

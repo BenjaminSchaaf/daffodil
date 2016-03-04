@@ -10,8 +10,14 @@
         },
         {
             "name": "unittest",
+            "targetType": "executable",
+            "mainSourceFile": "bin/ut.d",
             "sourcePaths": ["source", "test"],
             "importPaths": ["source", "test"],
+            "preBuildCommands": ["dub run unit-threaded -c gen_ut_main -- -f bin/ut.d"],
+            "dependencies": {
+                "unit-threaded": "~>0.6.3"
+            },
         },
         {
             "name": "docs",

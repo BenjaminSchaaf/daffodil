@@ -3,7 +3,6 @@ module dil.image;
 import std.typecons;
 
 import dil;
-import dil.util.test;
 import dil.util.range;
 
 /**
@@ -50,7 +49,8 @@ class Image(PixelFmt) {
     auto opDollar(size_t pos)() const { return _size[pos]; } /// Ditto
 
     // This segfaults for some reason
-    //mixin test!(Image, "Image size properties", {
+    //@("Image size properties")
+    //unittest {
     //    auto image = new Image!Pixel24Bpp(123, 234);
     //    assert(image.width == 123);
     //    assert(image.height == 234);
@@ -65,11 +65,12 @@ class Image(PixelFmt) {
      */
     enum bpp = PixelFmt.size;
 
-    mixin test!(Image, "Image bpp property", {
+    @("Image bpp property")
+    unittest {
         assert((Image!Pixel24Bpp).bpp == 24);
         assert((Image!Pixel32Bpp).bpp == 32);
         assert((Image!Pixel64Bpp).bpp == 64);
-    });
+    }
 
     /**
      * Get a pixel of the given pixel format at a location on the image.

@@ -1,4 +1,6 @@
 {
-	"versions": {},
-	"fileVersion": 1
+	"fileVersion": 1,
+	"versions": {
+		"unit-threaded": "0.6.3"
+	}
 }

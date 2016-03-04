@@ -5,7 +5,6 @@ import std.meta;
 import std.bigint;
 
 import dil.color;
-import dil.util.test;
 
 // Template that, given a size in bits
 // returns a template that returns whether a type fits in that size
@@ -26,13 +25,14 @@ private template Integer(size_t size) {
     }
 }
 
-mixin test!(Integer, "bit size to type conversion", {
+@("bit size to type conversion")
+unittest {
     static assert(is(Integer!3 == ubyte));
     static assert(is(Integer!8 == ubyte));
     static assert(is(Integer!9 == ushort));
     static assert(is(Integer!38 == ulong));
     static assert(is(Integer!128 == BigInt));
-});
+}
 
 private auto maxBitValue(size_t bitSize) {
     return pow(2, bitSize) - 1;
@@ -76,10 +76,11 @@ struct RGBPixel(size_t rgbSize) {
         return Color(red / s, green / s, blue / s, 1);
     }
 
-    mixin test!(RGBPixel, "color conversions", {
+    @("color conversions")
+    unittest {
         auto pix = RGBPixel!8(50, 40, 30);
         assert(RGBPixel!8(pix.toColor()) == pix);
-    });
+    }
 }
 
 /**
@@ -125,10 +126,11 @@ struct RGBAPixel(size_t rgbSize, size_t aSize = 0) {
         return Color(red / s, green / s, blue / s, alpha / cast(real)maxBitValue(aS));
     }
 
-    mixin test!(RGBAPixel, "color conversion", {
+    @("color conversion")
+    unittest {
         auto pix = RGBAPixel!8(50, 40, 30, 20);
         assert(RGBAPixel!8(pix.toColor()) == pix);
-    });
+    }
 }
 
 /// Standard 24Bpp pixel, 8R 8G 8B
