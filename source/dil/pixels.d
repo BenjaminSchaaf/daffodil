@@ -75,12 +75,12 @@ struct RGBPixel(size_t rgbSize) {
         real s = maxBitValue(rgbSize);
         return Color(red / s, green / s, blue / s, 1);
     }
+}
 
-    @("color conversions")
-    unittest {
-        auto pix = RGBPixel!8(50, 40, 30);
-        assert(RGBPixel!8(pix.toColor()) == pix);
-    }
+@("RGB color conversions")
+unittest {
+    auto pix = RGBPixel!8(50, 40, 30);
+    assert(RGBPixel!8(pix.toColor()) == pix);
 }
 
 /**
@@ -125,12 +125,12 @@ struct RGBAPixel(size_t rgbSize, size_t aSize = 0) {
         real s = maxBitValue(rgbSize);
         return Color(red / s, green / s, blue / s, alpha / cast(real)maxBitValue(aS));
     }
+}
 
-    @("color conversion")
-    unittest {
-        auto pix = RGBAPixel!8(50, 40, 30, 20);
-        assert(RGBAPixel!8(pix.toColor()) == pix);
-    }
+@("RGBA color conversion")
+unittest {
+    auto pix = RGBAPixel!8(50, 40, 30, 20);
+    assert(RGBAPixel!8(pix.toColor()) == pix);
 }
 
 /// Standard 24Bpp pixel, 8R 8G 8B
