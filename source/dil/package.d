@@ -11,6 +11,7 @@ public {
     import dil.image;
     import dil.color;
     import dil.pixels;
+    import dil.util.errors;
 
     static {
         // Image Formats
