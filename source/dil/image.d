@@ -48,29 +48,10 @@ class Image(PixelFmt) {
     @property size_t[2] size() const { return _size; } /// Ditto
     auto opDollar(size_t pos)() const { return _size[pos]; } /// Ditto
 
-    // This segfaults for some reason
-    //@("Image size properties")
-    //unittest {
-    //    auto image = new Image!Pixel24Bpp(123, 234);
-    //    assert(image.width == 123);
-    //    assert(image.height == 234);
-    //    size_t[2] size = [123, 234];
-    //    assert(image.size == size);
-    //    assert(image.opDollar!0 == 123);
-    //    assert(image.opDollar!1 == 234);
-    //});
-
     /**
      * Get the size of the given pixel format
      */
     enum bpp = PixelFmt.size;
-
-    @("Image bpp property")
-    unittest {
-        assert((Image!Pixel24Bpp).bpp == 24);
-        assert((Image!Pixel32Bpp).bpp == 32);
-        assert((Image!Pixel64Bpp).bpp == 64);
-    }
 
     /**
      * Get a pixel of the given pixel format at a location on the image.
@@ -102,4 +83,21 @@ class Image(PixelFmt) {
         import std.format;
         return format("%s", raster);
     }
+}
+
+@("Image bpp property")
+unittest {
+    assert((Image!Pixel24Bpp).bpp == 24);
+    assert((Image!Pixel32Bpp).bpp == 32);
+    assert((Image!Pixel64Bpp).bpp == 64);
+}
+
+@("Image size properties")
+unittest {
+    auto image = new Image!Pixel24Bpp(123, 234);
+    assert(image.width == 123);
+    assert(image.height == 234);
+    assert(image.size == [123, 234]);
+    assert(image.opDollar!0 == 123);
+    assert(image.opDollar!1 == 234);
 }
