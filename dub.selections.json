@@ -1,6 +1,6 @@
 {
 	"fileVersion": 1,
 	"versions": {
-		"unit-threaded": "0.6.3"
+		"unit-threaded": "~master"
 	}
 }
