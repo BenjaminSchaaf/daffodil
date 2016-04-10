@@ -2,7 +2,7 @@
 unittest {
     import daffodil;
 
-    auto image = bmp.load!Pixel24Bpp("test/images/bmp_small-24bpp.bmp");
+    auto image = load!Pixel24Bpp("test/images/bmp_small-24bpp.bmp");
     assert(image.width == 41);
     assert(image.height == 45);
     assert(image[10, 10] == Pixel24Bpp(0, 0, 255));
