@@ -1,4 +1,5 @@
 language: d
 d:
   - dmd
-  # Possibly add more compilers/versions
+  - gdc
+  - ldc
