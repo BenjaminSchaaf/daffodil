@@ -12,10 +12,10 @@
             "name": "unittest",
             "targetType": "executable",
             "targetName":"__test__unittest__",
-            "mainSourceFile": "bin/ut.d",
+            "mainSourceFile": "build/test/ut.d",
             "sourcePaths": ["source", "test"],
             "importPaths": ["source", "test"],
-            "preBuildCommands": ["dub run unit-threaded -c gen_ut_main -- -f bin/ut.d"],
+            "preBuildCommands": ["dub run unit-threaded -c gen_ut_main -- -f build/test/ut.d"],
             "dependencies": {
                 "unit-threaded": "~master"
             },
