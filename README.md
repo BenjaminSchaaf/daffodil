@@ -16,12 +16,14 @@ A image processing library for D, inspired by
 
 ```D
 import daffodil;
-import std.stdio;
+import daffodil.filter;
+import daffodil.transform;
 
 void main() {
-    auto image = open!Pixel24Bpp("some_image.bmp");
+    auto image = load!Pixel24Bpp("daffodil.bmp");
 
-    writefln("some_image.bmp, %dx%d", image.width, image.height);
-    writeln("image[10, 10] = ", image[10, 10].toColor());
+    image.gaussianBlurred(1.4).save("blurry_daffodil.bmp");
+
+    image.flipped!"y".save("upside_down_daffodil.bmp");
 }
 ```
