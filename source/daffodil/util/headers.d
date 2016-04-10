@@ -1,7 +1,7 @@
 /**
  * Templates for easily parsing headers using structs
  */
-module dil.util.headers;
+module daffodil.util.headers;
 
 import std.range;
 import std.array;

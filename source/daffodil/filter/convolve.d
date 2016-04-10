@@ -1,10 +1,10 @@
-module dil.filter.convolve;
+module daffodil.filter.convolve;
 
 import std.range;
 import std.algorithm;
 
-import dil.color;
-import dil.image;
+import daffodil.color;
+import daffodil.image;
 
 /**
  * Convolve a flat 2D matrix with a given center over an image and return the result.

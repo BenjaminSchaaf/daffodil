@@ -1,10 +1,10 @@
-module dil.pixels;
+module daffodil.pixels;
 
 import std.math;
 import std.meta;
 import std.bigint;
 
-import dil.color;
+import daffodil.color;
 
 // Template that, given a size in bits
 // returns a template that returns whether a type fits in that size

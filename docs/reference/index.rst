@@ -4,6 +4,6 @@ Reference
 .. toctree::
     :maxdepth: 2
 
-    dil
+    daffodil
     image
     color

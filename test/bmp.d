@@ -1,6 +1,6 @@
 @("load a BMP image file")
 unittest {
-    import dil;
+    import daffodil;
 
     auto image = bmp.load!Pixel24Bpp("test/images/bmp_small-24bpp.bmp");
     assert(image.width == 41);

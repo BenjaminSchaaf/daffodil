@@ -6,7 +6,6 @@ __dummy.html
 *.o
 *.a
 *.obj
-dil
 
 # Sphinx/Python
 build/

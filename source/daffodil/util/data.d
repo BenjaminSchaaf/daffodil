@@ -1,7 +1,7 @@
 /**
  * Provides common data manipulation functions.
  */
-module dil.util.data;
+module daffodil.util.data;
 
 import std.math;
 import std.meta;
@@ -9,9 +9,9 @@ import std.stdio;
 import std.typecons;
 import std.algorithm;
 
-import dil;
-import dil.util.range;
-import dil.util.errors;
+import daffodil;
+import daffodil.util.range;
+import daffodil.util.errors;
 
 private const FILE_CHUNK_SIZE = 4096;
 

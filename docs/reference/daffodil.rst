@@ -1,11 +1,11 @@
-.. d:module:: dil
+.. d:module:: daffodil
 
-dil
-###
+daffodil
+########
 
-The :d:mod:`dil` module provides the public interface for DIL. Publicly imports
-:d:mod:`dil.image`, :d:mod:`dil.pixels` and statically imports
-:d:mod:`dil.bmp`.
+The :d:mod:`daffodil` module provides the public interface for Daffodil.
+Publicly imports :d:mod:`daffodil.image`, :d:mod:`daffodil.pixels` and
+statically imports :d:mod:`daffodil.bmp`.
 
 Functions
 =========
@@ -18,13 +18,13 @@ Functions
 
     Attempt to detect the given image's type and then load it into an
     :d:class:`Image` instance. The ``PixelFmt`` defines the internal storage
-    format used by DIL.
+        format used by Daffodil.
 
 Example
 -------
 
 .. code-block:: d
 
-    import dil;
+    import daffodil;
 
     auto image = open!Pixel24Bpp("foo.bmp")

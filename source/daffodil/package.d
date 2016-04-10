@@ -1,25 +1,25 @@
-module dil;
+module daffodil;
 
 import std.stdio;
 import std.typecons;
 
-import dil.util.data;
-import dil.util.range;
+import daffodil.util.data;
+import daffodil.util.range;
 
 public {
-    import dil.meta;
-    import dil.image;
-    import dil.color;
-    import dil.pixels;
-    import dil.util.errors;
+    import daffodil.meta;
+    import daffodil.image;
+    import daffodil.color;
+    import daffodil.pixels;
+    import daffodil.util.errors;
 
     static {
         // Image Formats
-        import bmp = dil.bmp;
+        import bmp = daffodil.bmp;
 
         // Submodules
-        import filter = dil.filter;
-        import transform = dil.transform;
+        import filter = daffodil.filter;
+        import transform = daffodil.transform;
     }
 }
 

@@ -1,7 +1,7 @@
-module dil.bmp.headers;
+module daffodil.bmp.headers;
 
-import dil.bmp;
-import dil.util.headers;
+import daffodil.bmp;
+import daffodil.util.headers;
 
 const BMP_FILE_HEADER = [0x42, 0x4D];
 

@@ -1,9 +1,9 @@
-.. d:module:: dil.color
+.. d:module:: daffodil.color
 
-dil.color
-#########
+daffodil.color
+##############
 
-The :d:mod:`dil.color` module exposes the :d:struct:`Color` struct.
+The :d:mod:`daffodil.color` module exposes the :d:struct:`Color` struct.
 
 .. d:struct::
     struct Color

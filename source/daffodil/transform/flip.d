@@ -1,8 +1,8 @@
-module dil.transform.flip;
+module daffodil.transform.flip;
 
 import std.algorithm;
 
-import dil.image;
+import daffodil.image;
 
 /**
  * Flips a image along either the x, y or both axis.
@@ -37,7 +37,7 @@ auto flipped(string axis, PixelFmt)(const Image!PixelFmt image) {
 
 @("flip transformation")
 unittest {
-    import dil;
+    import daffodil;
 
     auto image = new Image!Pixel24Bpp(2, 2);
     image[0, 0] = Pixel24Bpp(255, 255, 255);

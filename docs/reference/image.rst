@@ -1,10 +1,10 @@
-.. d:module:: dil.image
+.. d:module:: daffodil.image
 
-dil.image
-#########
+daffodil.image
+##############
 
-The :d:mod:`dil.image` module exposes the :d:func:`Image` class, which provides
-basic storage, access and conversion of images.
+The :d:mod:`daffodil.image` module exposes the :d:func:`Image` class, which
+provides basic storage, access and conversion of images.
 
 .. d:class::
     class Image(PixelFmt)

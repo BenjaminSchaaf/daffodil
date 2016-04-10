@@ -1,4 +1,4 @@
-module dil.meta;
+module daffodil.meta;
 
 class MetaData {
     size_t width;

@@ -4,7 +4,7 @@ import std.file;
 import std.format;
 
 import unit_threaded;
-import dil;
+import daffodil;
 
 @ShouldFail
 @("pal1bg.bmp", "pal1wb.bmp", "pal4gs.bmp", "pal8-0.bmp", "pal8gs.bmp",

@@ -1,4 +1,4 @@
-module dil.color;
+module daffodil.color;
 
 import std.math;
 import std.range;

@@ -1,7 +1,7 @@
 /**
  * Provides extended functionality to std.range
  */
-module dil.util.range;
+module daffodil.util.range;
 
 import std.traits;
 public import std.range;

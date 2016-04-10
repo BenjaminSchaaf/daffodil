@@ -1,9 +1,9 @@
-module dil.image;
+module daffodil.image;
 
 import std.typecons;
 
-import dil;
-import dil.util.range;
+import daffodil;
+import daffodil.util.range;
 
 /**
  * Generic Image class for a given pixel format.

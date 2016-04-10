@@ -1,9 +1,9 @@
-module dil.filter.gaussian;
+module daffodil.filter.gaussian;
 
 import std.math;
 
-import dil.image;
-import dil.filter;
+import daffodil.image;
+import daffodil.filter;
 
 /**
  * Evaluate the gaussian/normal distribution for a given x, standard deviation and mean.
@@ -74,7 +74,7 @@ auto gaussianBlurred(string axis = "xy", PixelFmt)(const Image!PixelFmt image, r
 
 @("gaussian blur")
 unittest {
-    import dil;
+    import daffodil;
 
     auto image = new Image!Pixel24Bpp(2, 2);
     image[0, 0] = Color(1, 1, 1);

@@ -1,8 +1,7 @@
-# DIL
+# Daffodil
 
-D Imaging Library: Image processing in D, a library inspired by
-[Pillow](https://python-pillow.github.io/). Unlike other libraries, the internal storage
-format is not predefined and can instead be anything from 8Bpp to 1024Bpp+.
+A image processing library for D, inspired by
+[Pillow](https://python-pillow.github.io/).
 
 ## Goals
 
@@ -15,8 +14,8 @@ format is not predefined and can instead be anything from 8Bpp to 1024Bpp+.
 
 ## Example
 
-``` D
-import dil;
+```D
+import daffodil;
 import std.stdio;
 
 void main() {

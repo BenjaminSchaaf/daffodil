@@ -1,8 +1,8 @@
-module dil.bmp;
+module daffodil.bmp;
 
 public {
     static {
-        import headers = dil.bmp.headers;
+        import headers = daffodil.bmp.headers;
     }
 }
 
@@ -12,13 +12,13 @@ import std.bitmanip;
 import std.typecons;
 import std.algorithm;
 
-import dil;
-import dil.util.data;
-import dil.util.range;
-import dil.util.errors;
-import dil.util.headers;
+import daffodil;
+import daffodil.util.data;
+import daffodil.util.range;
+import daffodil.util.errors;
+import daffodil.util.headers;
 
-import dil.bmp.headers;
+import daffodil.bmp.headers;
 
 /// Register this file format with the common api
 static this() {

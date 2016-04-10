@@ -1,5 +1,5 @@
 {
-    "name": "dil",
+    "name": "daffodil",
     "description": "D Imaging Library",
     "authors": ["Cameron Lonsdale"],
     "copyright": "Copyright © 2015, Cameron Lonsdale",
@@ -11,6 +11,7 @@
         {
             "name": "unittest",
             "targetType": "executable",
+            "targetName":"__test__unittest__",
             "mainSourceFile": "bin/ut.d",
             "sourcePaths": ["source", "test"],
             "importPaths": ["source", "test"],

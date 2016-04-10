@@ -1,4 +1,4 @@
-module dil.util.errors;
+module daffodil.util.errors;
 
 public import std.exception;
 

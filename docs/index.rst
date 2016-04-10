@@ -1,8 +1,8 @@
-DIL
-###
+Daffodil
+########
 
-DIL is the D Imaging Library, loosely based on Pillow/PIL (Python Imaging
-Library)
+Daffodil is a D image processing Library, loosely based on Pillow/PIL (The
+Python Imaging Library)
 
 .. toctree::
     :maxdepth: 2
