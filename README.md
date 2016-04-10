@@ -1,5 +1,8 @@
 # Daffodil
 
+[![Build Status](https://travis-ci.org/BenjaminSchaaf/daffodil.svg?branch=master)](https://travis-ci.org/BenjaminSchaaf/daffodil)
+[![Coverage Status](https://coveralls.io/repos/github/BenjaminSchaaf/daffodil/badge.svg?branch=master)](https://coveralls.io/github/BenjaminSchaaf/daffodil?branch=master)
+
 A image processing library for D, inspired by
 [Pillow](https://python-pillow.github.io/).
 
