@@ -65,11 +65,11 @@ ImageRange!Pixel maskedRGBRasterLoad(R, T)(R data,
         }
 
         private void popPadding() {
-          auto bitRowPos = (x + 1) * bpp;
-          auto paddingBits = padding * 8;
-          auto bitRowSize = ((bitRowPos + paddingBits - 1) / paddingBits) * paddingBits;
-          auto pad = (bitRowSize - bitRowPos) / 8;
-          range.popFrontExactly(pad);
+            auto bitRowPos = (x + 1) * bpp;
+            auto paddingBits = padding * 8;
+            auto bitRowSize = ((bitRowPos + paddingBits - 1) / paddingBits) * paddingBits;
+            auto pad = (bitRowSize - bitRowPos) / 8;
+            range.popFrontExactly(pad);
         }
 
         void popFront() {
