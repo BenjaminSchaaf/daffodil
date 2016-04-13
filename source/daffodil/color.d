@@ -1,68 +1,103 @@
 module daffodil.color;
 
+import std.conv;
 import std.math;
-import std.range;
-import std.format;
 import std.array;
+import std.format;
 import std.algorithm;
 
-/**
- * RGBA floating point Color representation.
- * Uses largest hardware supported floating point size for maximum accuracy
- * Used by DIL for conversion between formats, especially external ones.
- */
-struct Color {
-    alias color_t = real;
+import daffodil.util.types;
 
-    private color_t[4] colors = [0, 0, 0, 1];
+interface ColorSpace(size_t bpc) {
+    alias T = Integer!bpc;
 
-    // Make sure a color never has any nan values
-    invariant {
-        foreach (color; colors) {
-            assert(!isNaN(color));
+    void channelopScalarMul(const T[], const real, T[]) const;
+    void channelopColorAdd(const T[], const T[], T[]) const;
+    string channelToString(const T[]) const;
+}
+
+struct Pixel(size_t bpc) {
+    alias T = Integer!bpc;
+
+    T[] values;
+    const ColorSpace!bpc colorSpace;
+
+    alias values this;
+
+    this(T[] values, const ColorSpace!bpc colorSpace) {
+        this.values = values;
+        this.colorSpace = colorSpace;
+    }
+
+    this(size_t size, const ColorSpace!bpc colorSpace) {
+        this(new T[size], colorSpace);
+    }
+
+    Pixel!bpc opBinary(string op : "*")(const real other) const {
+        auto ret = Pixel!bpc(this.length, colorSpace);
+        colorSpace.channelopScalarMul(values, other, ret.values);
+        return ret;
+    }
+
+    Pixel!bpc opBinary(string op : "+")(const Pixel!bpc other) const {
+        // TODO: Check other.colorSpace
+        auto ret = Pixel!bpc(this.length, colorSpace);
+        colorSpace.channelopColorAdd(values, other, ret.values);
+        return ret;
+    }
+
+    void opOpAssign(string op : "*")(const real other) {
+        colorSpace.channelopScalarMul(values, other, values);
+    }
+
+    void opOpAssign(string op : "+")(const Pixel!bpc other) {
+        colorSpace.channelopColorAdd(values, other, values);
+    }
+
+    void opAssign(const Pixel!bpc other) {
+        assert(other.length == this.length);
+        foreach (index; 0..this.length) {
+            this[index] = other[index];
         }
     }
 
-    /// Construct a new color given rgb[a] values.
-    this(color_t r, color_t g, color_t b, color_t a = 1) {
-        colors = [r, g, b, a];
-    }
-    /// ditto
-    this(color_t[3] c) {
-        colors[0..3] = c;
-    }
-    /// ditto
-    this(color_t[4] c) {
-        colors = c;
+    void clear() {
+        foreach (index; 0..this.length) {
+            this[index] = 0;
+        }
     }
 
-    private ref inout(color_t) prop(size_t i)() inout {
-        return colors[i];
+    @property auto dup() {
+        return Pixel!bpc(values.dup, colorSpace);
+    }
+}
+
+class RGB(size_t bpc) : ColorSpace!bpc {
+    alias T = Integer!bpc;
+
+    override void channelopColorAdd(const T[] self, const T[] other, T[] target) const {
+        assert(self.length == target.length);
+        assert(self.length == other.length);
+        foreach (index; 0..self.length) {
+            target[index] = cast(T)min(self[index] + other[index], T.max);
+        }
     }
 
-    alias red   = prop!0;
-    alias green = prop!1;
-    alias blue  = prop!2;
-    alias alpha = prop!3;
+    override void channelopScalarMul(const T[] self, const real other, T[] target) const {
+        assert(self.length == target.length);
 
-    ref inout(color_t) opIndex(size_t i) inout {
-        return colors[i];
+        foreach (index; 0..self.length) {
+            target[index] = cast(T)(self[index] * other);
+        }
     }
 
-    /**
-     * Standard vector color operations
-     */
-    auto opBinary(string op, T)(T rhs) const {
-        static if (op == "*") return Color(red * rhs, green * rhs, blue * rhs, alpha * rhs);
-        else static if (op == "+") return Color(zip(colors[], rhs.colors[]).map!(a => a[0] + a[1]).array[0..4]);
-        else static assert(0, "Operator "~op~" not implemented");
-    }
-    /// ditto
-    auto opBinaryRight(string op, T)(T rhs) const {
-        return opBinary!op(rhs);
-    }
-
-    string toString() const {
-        return format("Color(%.2f, %.2f, %.2f, %.2f)", red, green, blue, alpha);
+    override string channelToString(const T[] self) const {
+        real maxValue = pow(2, bpc);
+        string output = "(";
+        foreach (index; 0..self.length) {
+            if (index == 0) output ~= ", ";
+            output ~= (self[index] / maxValue).to!string;
+        }
+        return output ~ ")";
     }
 }

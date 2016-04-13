@@ -150,9 +150,14 @@ auto loadImage(R)(R data, MetaData meta) if (isInputRange!R &&
         dibHeader.alphaMask = mask[3];
     }
 
-    uint[4] mask = [dibHeader.redMask, dibHeader.greenMask,
-                    dibHeader.blueMask, dibHeader.alphaMask];
+    uint[] masks;
+    foreach (mask; [dibHeader.redMask, dibHeader.greenMask,
+                    dibHeader.blueMask, dibHeader.alphaMask]) {
+        if (mask != 0) {
+            masks ~= mask;
+        }
+    }
 
-    return maskedRGBRasterLoad(data, mask, dibHeader.bitCount,
-                               dibHeader.width, -dibHeader.height, 4);
+    return maskedRasterLoad(data, masks, dibHeader.bitCount,
+                            dibHeader.width, -dibHeader.height, 4);
 }

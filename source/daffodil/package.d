@@ -10,7 +10,6 @@ public {
     import daffodil.meta;
     import daffodil.image;
     import daffodil.color;
-    import daffodil.pixels;
     import daffodil.util.errors;
 
     static {
@@ -54,19 +53,18 @@ auto loadMeta(T)(T loadeable) {
 /**
  * Documentation
  */
-auto load(PixelFmt, T : DataRange)(T data, MetaData meta = null) {
+auto load(size_t bpc, T : DataRange)(T data, MetaData meta = null) {
     import std.stdio;
     auto format = detectFormat(data.save);
     if (meta is null) meta = format.loadMeta(data);
-    return new Image!PixelFmt(format.loadImage(data, meta));
+    return new Image!bpc(format.loadImage(data, meta), new RGB!bpc);
 }
 /// Ditto
-auto load(PixelFmt, T)(T loadeable) {
-    return load!PixelFmt(dataLoad(loadeable));
+auto load(size_t bpc, T)(T loadeable) {
+    return load!bpc(dataLoad(loadeable));
 }
 
-alias Pixel      = Tuple!(Color, "color", size_t, "x", size_t, "y");
-alias DataRange  = ForwardRange!ubyte;
+alias DataRange = ForwardRange!ubyte;
 
 /**
  * Documentation
@@ -75,8 +73,8 @@ struct Format {
     string name;
     bool function(DataRange) check;
     MetaData function(DataRange) loadMeta;
-    ImageRange!Pixel function(DataRange, MetaData) loadImage;
-    void function(OutputRange!ubyte, ImageRange!Pixel, MetaData) save;
+    ImageRange!PixelData function(DataRange, MetaData) loadImage;
+    void function(OutputRange!ubyte, ImageRange!PixelData, MetaData) save;
     string[] extensions;
 }
 

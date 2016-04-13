@@ -3,8 +3,8 @@ module daffodil.filter.convolve;
 import std.range;
 import std.algorithm;
 
-import daffodil.color;
 import daffodil.image;
+import daffodil.color;
 
 /**
  * Convolve a flat 2D matrix with a given center over an image and return the result.
@@ -14,7 +14,7 @@ import daffodil.image;
  *
  * TODO: Abstract away matrix, width and center into a kernel
  */
-auto convolved(PixelFmt)(const Image!PixelFmt image, const real[] matrix, int width, int[2] center) {
+auto convolved(size_t bpc)(const Image!bpc image, const real[] matrix, int width, int[2] center) {
     auto height = matrix.length / width;
     auto ret = image.dup;
 
@@ -24,7 +24,8 @@ auto convolved(PixelFmt)(const Image!PixelFmt image, const real[] matrix, int wi
             real accum = 0;
 
             // Accumulate color by weighing adjacent pixels according to given matrix.
-            Color color;
+            auto color = ret.newColor();
+
             foreach (indexY; 0..height) {
                 auto matrixY = indexY - center[1];
                 if (matrixY + imageY < 0 || matrixY + imageY >= image.height) continue;
@@ -37,18 +38,19 @@ auto convolved(PixelFmt)(const Image!PixelFmt image, const real[] matrix, int wi
                     accum += matrixValue;
 
                     //TODO: Shorthand once color operation is implemented
-                    color = color + image[imageX + matrixX, imageY + matrixY].toColor() * matrixValue;
+                    color = color + image[imageX + matrixX, imageY + matrixY] * matrixValue;
                 }
             }
+
             ret[imageX, imageY] = color * (1/accum);
         }
     }
 
     return ret;
 }
-/// ditto
-auto convolved(string axis, PixelFmt)(const Image!PixelFmt image, const real[] matrix, int center) {
-    auto ret = cast(Image!PixelFmt)image;
+/// Ditto
+auto convolved(string axis, size_t bpc)(const Image!bpc image, const real[] matrix, int center) {
+    auto ret = cast(Image!bpc)image;
 
     static if (canFind(axis, 'x')) {
         // Apply matrix horizontally
@@ -62,9 +64,9 @@ auto convolved(string axis, PixelFmt)(const Image!PixelFmt image, const real[] m
 
     return ret;
 }
-/// ditto
-auto convolved(string axis, PixelFmt)(const Image!PixelFmt image, const real[] matrix) {
-    return image.convolved!(axis, PixelFmt)(matrix, cast(int)(matrix.length / 2));
+/// Ditto
+auto convolved(string axis, size_t bpc)(const Image!bpc image, const real[] matrix) {
+    return image.convolved!axis(matrix, cast(int)(matrix.length / 2));
 }
 
 //TODO: Add tests

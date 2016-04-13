@@ -68,23 +68,25 @@ unittest {
  * Convenience method for applying gaussian blur.
  * Combines the gaussianMatrix and convolved functions.
  */
-auto gaussianBlurred(string axis = "xy", PixelFmt)(const Image!PixelFmt image, real stDev = 1, real maxDev = 3) {
-    return image.convolved!axis(gaussianMatrix(stDev, maxDev));
+auto gaussianBlurred(string axis = "xy", size_t bpc)(const Image!bpc image, real stDev = 1, real maxDev = 3) {
+    auto matrix = gaussianMatrix(stDev, maxDev);
+
+    return image.convolved!axis(matrix);
 }
 
 @("gaussian blur")
 unittest {
     import daffodil;
 
-    auto image = new Image!Pixel24Bpp(2, 2);
-    image[0, 0] = Color(1, 1, 1);
-    image[0, 1] = Color(1, 0, 0);
-    image[1, 0] = Color(0, 1, 0);
-    image[1, 1] = Color(0, 0, 1);
+    auto image = new Image!8(2, 2, 3, new RGB!8);
+    image[0, 0] = [1f, 1f, 1f];
+    image[0, 1] = [1f, 0f, 0f];
+    image[1, 0] = [0f, 1f, 0f];
+    image[1, 1] = [0f, 0f, 1f];
 
     auto blurred = image.gaussianBlurred(2);
-    assert(blurred[0, 0] == Pixel24Bpp(135, 135, 127));
-    assert(blurred[0, 1] == Pixel24Bpp(135,  119, 126));
-    assert(blurred[1, 0] == Pixel24Bpp( 119, 135, 126));
-    assert(blurred[1, 1] == Pixel24Bpp( 119,  119, 127));
+    assert(blurred[0, 0] == [130, 130, 122]);
+    assert(blurred[0, 1] == [130, 117, 122]);
+    assert(blurred[1, 0] == [114, 130, 122]);
+    assert(blurred[1, 1] == [114, 117, 122]);
 }

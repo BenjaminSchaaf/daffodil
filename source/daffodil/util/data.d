@@ -10,6 +10,7 @@ import std.typecons;
 import std.algorithm;
 
 import daffodil;
+import daffodil.util.types;
 import daffodil.util.range;
 import daffodil.util.errors;
 
@@ -29,16 +30,22 @@ DataRange dataLoad(string path) {
 
 alias Loadeable = AliasSeq!(File, string);
 
+struct PixelData {
+    size_t x, y;
+    real[] data;
+}
+
 /**
  * Documentation
  */
-ImageRange!Pixel maskedRGBRasterLoad(R, T)(R data,
-                                           T[4] mask,
-                                           size_t bpp,
-                                           ptrdiff_t _width,
-                                           ptrdiff_t _height,
-                                           size_t padding = 1) if (isInputRange!R &&
-                                                                   is(ElementType!R == ubyte)) {
+ImageRange!PixelData maskedRasterLoad(R, T)(
+        R data,
+        T[] mask,
+        size_t bpp,
+        ptrdiff_t _width,
+        ptrdiff_t _height,
+        size_t padding = 1) if (isInputRange!R &&
+                                is(ElementType!R == ubyte)) {
     // currently don't support non multiples of 8
     assert(bpp % 8 == 0);
 
@@ -46,22 +53,26 @@ ImageRange!Pixel maskedRGBRasterLoad(R, T)(R data,
         R range;
         size_t x = 0;
         size_t y = 0;
+        size_t channelCount;
+        real[] loadBuffer;
 
         this(R range) {
             this.range = range;
+            this.channelCount = mask.length;
+            this.loadBuffer = new real[channelCount];
         }
 
         @property bool empty() {
             return y >= height;
         }
 
-        @property Pixel front() {
+        @property PixelData front() {
             // TODO: Make this happen in popFront
-            auto c = maskedRGBLoad(data, mask, bpp);
+            maskedLoad(loadBuffer, data, mask, bpp);
 
             // Adjust for negative heights
             auto yReal = _height < 0 ? height - y - 1 : y;
-            return Pixel(c, x, yReal);
+            return PixelData(x, yReal, loadBuffer);
         }
 
         private void popPadding() {
@@ -89,13 +100,13 @@ ImageRange!Pixel maskedRGBRasterLoad(R, T)(R data,
     return Range(data).imageRangeObject;
 }
 
-Color maskedRGBLoad(R, T)(R range, T[4] mask, size_t bpp) {
+void maskedLoad(R, T)(real[] target, R range, T[] mask, size_t bpp) {
     auto data = range.take(bpp / 8).array;
     enforce!UnexpectedEndOfData(data.length == bpp / 8);
 
     // TODO: Actually implement this, ie. no special case
-    enforce!NotSupported(bpp / 8 == 3);
-    auto color = Color(data[2] / 255f, data[1] / 255f, data[0] / 255f);
-
-    return color;
+    enforce!NotSupported(bpp % 8 == 0);
+    target[0] = data[2] / 255f;
+    target[1] = data[1] / 255f;
+    target[2] = data[0] / 255f;
 }

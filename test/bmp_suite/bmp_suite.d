@@ -18,7 +18,7 @@ void testGoodBMPImagesFail(string fileName) {
 
 @("rgb24.bmp")
 void testGoodBMPImages(string fileName) {
-    auto image = load!Pixel24Bpp("test/bmp_suite/g/" ~ fileName);
+    auto image = load!32("test/bmp_suite/g/" ~ fileName);
     assert(image !is null);
 }
 
@@ -29,7 +29,7 @@ void testGoodBMPImages(string fileName) {
   "badrleter.bmp", "pal8badindex.bmp", "rgb16-880.bmp", "shortfile.bmp")
 void testBadBMPImages(string fileName) {
     shouldThrow!(ImageException)(
-        load!Pixel24Bpp("test/bmp_suite/b/" ~ fileName)
+        load!32("test/bmp_suite/b/" ~ fileName)
     );
 }
 
@@ -43,7 +43,7 @@ void testBadBMPImages(string fileName) {
   "rgb24png.bmp", "rgb32-7187.bmp", "rgba16-1924.bmp", "rgba32-81284.bmp")
 void testQuestionableBMPImages(string fileName) {
     try {
-        auto image = load!Pixel24Bpp("test/bmp_suite/q/" ~ fileName);
+        auto image = load!32("test/bmp_suite/q/" ~ fileName);
         assert(image !is null);
     } catch (ImageException e) {
         assert(true);
