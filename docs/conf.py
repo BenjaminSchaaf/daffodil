@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# DIL documentation build configuration file, created by
+# Daffodil documentation build configuration file, created by
 # sphinx-quickstart on Sat Dec 19 02:58:25 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'DIL'
+project = 'Daffodil'
 copyright = '2015, Cameron Lonsdale, Benjamin Schaaf'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -182,4 +182,4 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'DILdoc'
+htmlhelp_basename = 'Daffodildoc'
