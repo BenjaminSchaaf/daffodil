@@ -7,6 +7,8 @@
 A image processing library for D, inspired by
 [Pillow](https://python-pillow.github.io/).
 
+Read the documentation [here](http://daffodil.readthedocs.org/en/latest/).
+
 ## Goals
 
 - Simple, Extensible API
