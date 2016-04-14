@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/BenjaminSchaaf/daffodil.svg?branch=master)](https://travis-ci.org/BenjaminSchaaf/daffodil)
 [![Coverage Status](https://coveralls.io/repos/github/BenjaminSchaaf/daffodil/badge.svg?branch=master)](https://coveralls.io/github/BenjaminSchaaf/daffodil?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/daffodil/badge/?version=latest)](http://daffodil.readthedocs.org/en/latest/?badge=latest)
+[![DUB Listing](https://img.shields.io/dub/dt/daffodil.svg)](http://code.dlang.org/packages/daffodil)
 
 A image processing library for D, inspired by
 [Pillow](https://python-pillow.github.io/).
