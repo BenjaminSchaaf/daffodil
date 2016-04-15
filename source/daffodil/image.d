@@ -76,8 +76,6 @@ class Image(size_t bpc_) {
      */
     @property auto channelCount() const { return _channelCount; }
 
-
-
     /**
      * Get a pixel of the given pixel format at a location on the image.
      */
