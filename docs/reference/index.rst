@@ -8,4 +8,5 @@ Reference
     meta
     image
     color
+    filter
     transform
