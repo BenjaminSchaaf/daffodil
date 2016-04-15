@@ -102,6 +102,10 @@ class DStruct(DClass):
     def get_objtype(self):
         return'struct'
 
+class DInterface(DClass):
+    def get_objtype(self):
+        return 'interface'
+
 class DFunction(DObject):
     def infer_name(self):
         return 'TODO'
@@ -146,29 +150,32 @@ class DDomain(Domain):
     label = 'Dlang'
 
     object_types = {
-        'module':   ObjType(l_('module'),   'mod',    'obj'),
-        'class':    ObjType(l_('class'),    'class',  'obj'),
-        'struct':   ObjType(l_('struct'),   'struct', 'obj'),
-        'function': ObjType(l_('function'), 'func',   'obj'),
-        'alias':    ObjType(l_('alias'),    'alias',  'obj'),
-        'enum':     ObjType(l_('enum'),     'enum',   'obj'),
-        'variable': ObjType(l_('variable'), 'var',    'obj'),
+        'module':    ObjType(l_('module'),    'mod',    'obj'),
+        'class':     ObjType(l_('class'),     'class',  'obj'),
+        'struct':    ObjType(l_('struct'),    'struct', 'obj'),
+        'interface': ObjType(l_('interface'), 'inter',  'obj'),
+        'function':  ObjType(l_('function'),  'func',   'obj'),
+        'alias':     ObjType(l_('alias'),     'alias',  'obj'),
+        'enum':      ObjType(l_('enum'),      'enum',   'obj'),
+        'variable':  ObjType(l_('variable'),  'var',    'obj'),
     }
 
     directives = {
-        'module':   DModule,
-        'class':    DClass,
-        'struct':   DStruct,
-        'function': DFunction,
-        'alias':    DAlias,
-        'enum':     DEnum,
-        'variable': DVariable,
+        'module':    DModule,
+        'class':     DClass,
+        'struct':    DStruct,
+        'interface': DInterface,
+        'function':  DFunction,
+        'alias':     DAlias,
+        'enum':      DEnum,
+        'variable':  DVariable,
     }
 
     roles = {
         'mod':    DXRefRole('mod'),
         'class':  DXRefRole('class'),
         'struct': DXRefRole('struct'),
+        'inter':  DXRefRole('inter'),
         'func':   DXRefRole('func'),
         'alias':  DXRefRole('alias'),
         'enum':   DXRefRole('enum'),
