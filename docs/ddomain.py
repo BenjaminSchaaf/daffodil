@@ -109,6 +109,13 @@ class DFunction(DObject):
     def get_objtype(self):
         return'function'
 
+class DAlias(DObject):
+    def infer_name(self):
+        return 'TODO'
+
+    def get_objtype(self):
+        return 'alias'
+
 class DXRefRole(XRefRole):
     def __init__(self, target_type):
         XRefRole.__init__(self)
@@ -129,6 +136,7 @@ class DDomain(Domain):
         'class':    ObjType(l_('class'),    'class', 'obj'),
         'struct':   ObjType(l_('struct'),   'struct', 'obj'),
         'function': ObjType(l_('function'), 'func', 'obj'),
+        'alias':    ObjType(l_('alias'),    'alias', 'obj'),
     }
 
     directives = {
@@ -136,6 +144,7 @@ class DDomain(Domain):
         'class':    DClass,
         'struct':   DStruct,
         'function': DFunction,
+        'alias':    DAlias,
     }
 
     roles = {
@@ -143,6 +152,7 @@ class DDomain(Domain):
         'class':  DXRefRole('class'),
         'struct': DXRefRole('struct'),
         'func':   DXRefRole('func'),
+        'alias':  DXRefRole('alias'),
     }
 
     initial_data = {
