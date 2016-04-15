@@ -116,6 +116,13 @@ class DAlias(DObject):
     def get_objtype(self):
         return 'alias'
 
+class DEnum(DObject):
+    def infer_name(self):
+        return 'TODO'
+
+    def get_objtype(self):
+        return 'enum'
+
 class DVariable(DObject):
     def infer_name(self):
         return self.arguments[0].split(' ')[1]
@@ -144,6 +151,7 @@ class DDomain(Domain):
         'struct':   ObjType(l_('struct'),   'struct', 'obj'),
         'function': ObjType(l_('function'), 'func',   'obj'),
         'alias':    ObjType(l_('alias'),    'alias',  'obj'),
+        'enum':     ObjType(l_('enum'),     'enum',   'obj'),
         'variable': ObjType(l_('variable'), 'var',    'obj'),
     }
 
@@ -153,6 +161,7 @@ class DDomain(Domain):
         'struct':   DStruct,
         'function': DFunction,
         'alias':    DAlias,
+        'enum':     DEnum,
         'variable': DVariable,
     }
 
@@ -162,6 +171,7 @@ class DDomain(Domain):
         'struct': DXRefRole('struct'),
         'func':   DXRefRole('func'),
         'alias':  DXRefRole('alias'),
+        'enum':   DXRefRole('enum'),
         'var':    DXRefRole('var'),
     }
 
