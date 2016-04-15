@@ -2,9 +2,10 @@ Reference
 #########
 
 .. toctree::
-    :maxdepth: 2
+    :includehidden:
 
     daffodil
     meta
     image
     color
+    transform
