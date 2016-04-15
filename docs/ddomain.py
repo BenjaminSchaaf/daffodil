@@ -116,6 +116,13 @@ class DAlias(DObject):
     def get_objtype(self):
         return 'alias'
 
+class DVariable(DObject):
+    def infer_name(self):
+        return self.arguments[0].split(' ')[1]
+
+    def get_objtype(self):
+        return 'variable'
+
 class DXRefRole(XRefRole):
     def __init__(self, target_type):
         XRefRole.__init__(self)
@@ -132,11 +139,12 @@ class DDomain(Domain):
     label = 'Dlang'
 
     object_types = {
-        'module':   ObjType(l_('module'),   'mod', 'obj'),
-        'class':    ObjType(l_('class'),    'class', 'obj'),
+        'module':   ObjType(l_('module'),   'mod',    'obj'),
+        'class':    ObjType(l_('class'),    'class',  'obj'),
         'struct':   ObjType(l_('struct'),   'struct', 'obj'),
-        'function': ObjType(l_('function'), 'func', 'obj'),
-        'alias':    ObjType(l_('alias'),    'alias', 'obj'),
+        'function': ObjType(l_('function'), 'func',   'obj'),
+        'alias':    ObjType(l_('alias'),    'alias',  'obj'),
+        'variable': ObjType(l_('variable'), 'var',    'obj'),
     }
 
     directives = {
@@ -145,6 +153,7 @@ class DDomain(Domain):
         'struct':   DStruct,
         'function': DFunction,
         'alias':    DAlias,
+        'variable': DVariable,
     }
 
     roles = {
@@ -153,6 +162,7 @@ class DDomain(Domain):
         'struct': DXRefRole('struct'),
         'func':   DXRefRole('func'),
         'alias':  DXRefRole('alias'),
+        'var':    DXRefRole('var'),
     }
 
     initial_data = {
