@@ -5,8 +5,7 @@ daffodil
 
 The :d:mod:`daffodil` module provides the public interface for Daffodil.
 
-Imports
-=======
+Public Imports:
 
 - :d:mod:`daffodil.meta`
 - :d:mod:`daffodil.image`
@@ -14,23 +13,14 @@ Imports
 - :d:mod:`daffodil.util.errors`
 
 Submodules
-----------
+==========
 
 - :d:mod:`filter<daffodil.filter>`
 - :d:mod:`transform<daffodil.transform>`
 - :d:mod:`bmp<daffodil.bmp>`
 
-Aliases
-=======
-
-.. d:alias::
-    alias DataRange = ForwardRange!ubyte
-    :name: DataRange
-
-    Alias for a stream of byte data that a image can be loaded from.
-
-Functions
-=========
+Image Functions
+===============
 
 .. d:function::
     Format detectFormat(T : DataRange)(T data)
@@ -53,8 +43,14 @@ Functions
 
     .. todo:: docs
 
-API Extension
-=============
+.. d:alias::
+    alias DataRange = ForwardRange!ubyte
+    :name: DataRange
+
+    Alias for a stream of byte data that a image can be loaded from.
+
+API Extensions
+==============
 
 .. d:function::
     void registerFormat(Format format)
