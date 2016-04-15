@@ -34,3 +34,42 @@ void main() {
     image.flipped!"y".save("upside_down_daffodil.bmp");
 }
 ```
+
+
+## Installing
+
+Add daffodil as a dependency to your
+[dub.json](https://code.dlang.org/package-format?lang=json):
+
+```json
+"dependencies": {
+    "daffodil": "~>0.1.0"
+}
+```
+
+Or [fetch](https://code.dlang.org/docs/commandline) the package directly:
+
+```bash
+dub fetch daffodil
+```
+
+## Development
+
+### Testing
+
+Tests use the [unit-threaded](https://github.com/atilaneves/unit-threaded)
+framework and can be run using:
+
+```bash
+dub test
+```
+
+### Documentation
+
+Documentation is written using the [sphinx
+framework](http://www.sphinx-doc.org/en/stable/) and can be compiled to html
+using:
+
+```bash
+dub -c docs
+```
