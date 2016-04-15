@@ -1,8 +1,8 @@
 {
     "name": "daffodil",
     "description": "D Imaging Library",
-    "authors": ["Cameron Lonsdale"],
-    "copyright": "Copyright © 2015, Cameron Lonsdale",
+    "authors": ["Cameron Lonsdale", "Benjamin Schaaf"],
+    "copyright": "Copyright © 2015, Cameron Lonsdale, Benjamin Schaaf",
     "license": "GPL-2.0",
     "configurations": [
         {
