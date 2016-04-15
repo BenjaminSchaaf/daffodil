@@ -4,27 +4,89 @@ daffodil
 ########
 
 The :d:mod:`daffodil` module provides the public interface for Daffodil.
-Publicly imports :d:mod:`daffodil.image`, :d:mod:`daffodil.pixels` and
-statically imports :d:mod:`daffodil.bmp`.
+
+Imports
+=======
+
+- :d:mod:`daffodil.meta`
+- :d:mod:`daffodil.image`
+- :d:mod:`daffodil.color`
+- :d:mod:`daffodil.util.errors`
+
+Submodules
+----------
+
+- :d:mod:`filter<daffodil.filter>`
+- :d:mod:`transform<daffodil.transform>`
+- :d:mod:`bmp<daffodil.bmp>`
+
+Aliases
+=======
+
+.. d:alias::
+    alias DataRange = ForwardRange!ubyte
+    :name: DataRange
+
+    Alias for a stream of byte data that a image can be loaded from.
 
 Functions
 =========
 
 .. d:function::
-    Image!PixelFmt open(PixelFmt)(File file)
-    Image!PixelFmt open(PixelFmt)(string path)
-    Image!PixelFmt open(PixelFmt)(ubyte[] data)
-    :name: open
+    Format detectFormat(T : DataRange)(T data)
+    Format detectFormat(T : Loadeable) if (isLoadable!T)
+    :name: detectFormat
 
-    Attempt to detect the given image's type and then load it into an
-    :d:class:`Image` instance. The ``PixelFmt`` defines the internal storage
-        format used by Daffodil.
+    .. todo:: docs
 
-Example
--------
+.. d:function::
+    MetaData loadMeta(T : DataRange)(T data)
+    MetaData loadMeta(T : Loadeable) if (isLoadable!T)
+    :name: loadMeta
 
-.. code-block:: d
+    .. todo:: docs
 
-    import daffodil;
+.. d:function::
+    Image!bpc load(size_t bpc, T : DataRange)(T data, MetaData meta = null)
+    Image!bpc load(size_t bpc, T : Loadeable) if (isLoadable!T)
+    :name: load
 
-    auto image = open!Pixel24Bpp("foo.bmp")
+    .. todo:: docs
+
+API Extension
+=============
+
+.. d:function::
+    void registerFormat(Format format)
+    :name: registerFormat
+
+    Register a new :d:struct:`Format` for loading images.
+
+    Example::
+
+        // my_image_format.d
+        static this() {
+            registerFormat(Format(
+                "MyImageFormat",
+                &check!DataRange,
+                &loadMeta!DataRange,
+                &loadImage!DataRange,
+                null, // Not implemented yet
+                [".mif", ".myif"],
+            ));
+        }
+
+        // MyImageFormat can then be inferred
+        auto image = load!8("daffodil.mif");
+
+.. d:struct::
+    struct Format
+
+    ::
+
+        string name;
+        bool function(DataRange) check;
+        MetaData function(DataRange) loadMeta;
+        ImageRange!PixelData function(DataRange, MetaData) loadImage;
+        void function(OutputRange!ubyte, ImageRange!PixelData, MetaData) save;
+        string[] extensions;
