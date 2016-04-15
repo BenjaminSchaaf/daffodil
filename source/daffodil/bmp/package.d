@@ -42,7 +42,7 @@ bool check(R)(R data) if (isInputRange!R &&
     return equal(data.takeExactly(2), [0x42, 0x4D]);
 }
 /// Ditto
-bool check(T : Loadeable)(T loadeable) {
+bool check(T : Loadeable)(T loadeable) if(isLoadable!T) {
     return check(dataLoad(loadeable));
 }
 
@@ -68,7 +68,7 @@ BMPMetaData loadMeta(R)(R data) if (isInputRange!R &&
     return null;
 }
 /// Ditto
-auto loadMeta(T : Loadeable)(T loadeable) {
+auto loadMeta(T : Loadeable)(T loadeable) if(isLoadable!T) {
     return loadMeta(dataLoad(loadeable));
 }
 
@@ -80,7 +80,7 @@ auto load(PixelFmt, T : DataRange)(T data, MetaData meta = null) {
     return new Image!PixelFmt(loadImage(data, meta));
 }
 /// Ditto
-auto load(PixelFmt, T)(T loadeable) {
+auto load(PixelFmt, T)(T loadeable) if(isLoadable!T) {
     return load!PixelFmt(dataLoad(loadeable));
 }
 

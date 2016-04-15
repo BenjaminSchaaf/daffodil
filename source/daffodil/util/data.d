@@ -30,6 +30,10 @@ DataRange dataLoad(string path) {
 
 alias Loadeable = AliasSeq!(File, string);
 
+template isLoadeable(E) {
+    enum isLoadeable = staticIndexOf!(E, Loadeable) != -1;
+}
+
 struct PixelData {
     size_t x, y;
     real[] data;
@@ -67,6 +71,7 @@ ImageRange!PixelData maskedRasterLoad(R, T)(
         }
 
         @property PixelData front() {
+            import unit_threaded.io; writelnUt(x, ", ", y);
             // TODO: Make this happen in popFront
             maskedLoad(loadBuffer, data, mask, bpp);
 

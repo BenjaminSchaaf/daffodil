@@ -12,13 +12,12 @@ public {
     import daffodil.color;
     import daffodil.util.errors;
 
+    // Submodules
     static {
-        // Image Formats
-        import bmp = daffodil.bmp;
-
-        // Submodules
         import filter = daffodil.filter;
         import transform = daffodil.transform;
+        // Image Formats
+        import bmp = daffodil.bmp;
     }
 }
 
@@ -34,7 +33,7 @@ Format detectFormat(T : DataRange)(T data) {
     assert(false);
 }
 /// Ditto
-auto detectFormat(T)(T loadeable) {
+auto detectFormat(T)(T loadeable) if (isLoadeable!T) {
     return detectFormat(dataLoad(loadeable));
 }
 
@@ -46,7 +45,7 @@ auto loadMeta(T : DataRange)(T data) {
     return format.loadMeta(data);
 }
 /// Ditto
-auto loadMeta(T)(T loadeable) {
+auto loadMeta(T)(T loadeable) if (isLoadeable!T) {
     return loadMeta(dataLoad(loadeable));
 }
 
@@ -60,7 +59,7 @@ auto load(size_t bpc, T : DataRange)(T data, MetaData meta = null) {
     return new Image!bpc(format.loadImage(data, meta), new RGB!bpc);
 }
 /// Ditto
-auto load(size_t bpc, T)(T loadeable) {
+auto load(size_t bpc, T)(T loadeable) if (isLoadeable!T) {
     return load!bpc(dataLoad(loadeable));
 }
 
