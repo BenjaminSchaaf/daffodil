@@ -31,6 +31,7 @@ void main() {
 
     image.gaussianBlurred(1.4).save("blurry_daffodil.bmp");
 
+    // Note: Saving does not yet work
     image.flipped!"y".save("upside_down_daffodil.bmp");
 }
 ```
