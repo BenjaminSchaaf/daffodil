@@ -9,28 +9,28 @@ import std.algorithm;
 import daffodil.util.types;
 
 interface ColorSpace(size_t bpc) {
-    alias T = Integer!bpc;
+    alias Value = Integer!bpc;
 
-    void channelopScalarMul(const T[], const real, T[]) const;
-    void channelopColorAdd(const T[], const T[], T[]) const;
-    string channelToString(const T[]) const;
+    void channelopScalarMul(const Value[], const real, Value[]) const;
+    void channelopColorAdd(const Value[], const Value[], Value[]) const;
+    string channelToString(const Value[]) const;
 }
 
 struct Pixel(size_t bpc) {
-    alias T = Integer!bpc;
+    alias Value = Integer!bpc;
 
-    T[] values;
+    Value[] values;
     const ColorSpace!bpc colorSpace;
 
     alias values this;
 
-    this(T[] values, const ColorSpace!bpc colorSpace) {
+    this(Value[] values, const ColorSpace!bpc colorSpace) {
         this.values = values;
         this.colorSpace = colorSpace;
     }
 
     this(size_t size, const ColorSpace!bpc colorSpace) {
-        this(new T[size], colorSpace);
+        this(new Value[size], colorSpace);
     }
 
     Pixel!bpc opBinary(string op : "*")(const real other) const {
@@ -73,25 +73,25 @@ struct Pixel(size_t bpc) {
 }
 
 class RGB(size_t bpc) : ColorSpace!bpc {
-    alias T = Integer!bpc;
+    alias Value = Integer!bpc;
 
-    override void channelopColorAdd(const T[] self, const T[] other, T[] target) const {
+    override void channelopColorAdd(const Value[] self, const Value[] other, Value[] target) const {
         assert(self.length == target.length);
         assert(self.length == other.length);
         foreach (index; 0..self.length) {
-            target[index] = cast(T)min(self[index] + other[index], T.max);
+            target[index] = cast(Value)min(self[index] + other[index], Value.max);
         }
     }
 
-    override void channelopScalarMul(const T[] self, const real other, T[] target) const {
+    override void channelopScalarMul(const Value[] self, const real other, Value[] target) const {
         assert(self.length == target.length);
 
         foreach (index; 0..self.length) {
-            target[index] = cast(T)(self[index] * other);
+            target[index] = cast(Value)(self[index] * other);
         }
     }
 
-    override string channelToString(const T[] self) const {
+    override string channelToString(const Value[] self) const {
         real maxValue = pow(2, bpc);
         string output = "(";
         foreach (index; 0..self.length) {
