@@ -51,8 +51,8 @@ class ImageRangeObject(R) : ImageRange!(ElementType!R) {
     int opApply(int delegate(E) dg) {
         int res;
 
-        for(auto r = _range; !r.empty; r.popFront()) {
-            res = dg(r.front);
+        foreach (i, e; this) {
+            res = dg(e);
             if (res) break;
         }
 
@@ -63,8 +63,8 @@ class ImageRangeObject(R) : ImageRange!(ElementType!R) {
         int res;
 
         size_t i = 0;
-        for(auto r = _range; !r.empty; r.popFront()) {
-            res = dg(i, r.front);
+        for(; !empty; popFront()) {
+            res = dg(i, front);
             if (res) break;
             i++;
         }
