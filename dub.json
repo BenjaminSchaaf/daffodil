@@ -17,7 +17,7 @@
             "importPaths": ["source", "test"],
             "preBuildCommands": ["dub run unit-threaded -c gen_ut_main -- -f build/test/ut.d"],
             "dependencies": {
-                "unit-threaded": "~master"
+                "unit-threaded": "~>0.6.6"
             },
         },
         {
