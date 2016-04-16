@@ -8,7 +8,7 @@ import daffodil;
 
 @ShouldFail
 @("pal1bg.bmp", "pal1wb.bmp", "pal4gs.bmp", "pal8-0.bmp", "pal8gs.bmp",
-  "pal8os2.bmp", "pal8topdown.bmp", "pal8v5.bmp", "pal8w125.bmp", "rgb32bf.bmp",
+  "pal8os2.bmp", "pal8topdown.bmp", "pal8v5.bmp", "pal8w125.bmp",
   "rgb16-565.bmp", "rgb16.bmp", "rgb24pal.bmp", "pal1.bmp", "pal4.bmp",
   "pal4rle.bmp", "pal8.bmp", "pal8nonsquare.bmp", "pal8rle.bmp", "pal8v4.bmp",
   "pal8w124.bmp", "pal8w126.bmp", "rgb16-565pal.bmp")
@@ -16,7 +16,7 @@ void testGoodBMPImagesFail(string fileName) {
   testGoodBMPImages(fileName);
 }
 
-@("rgb24.bmp", "rgb32.bmp")
+@("rgb24.bmp", "rgb32.bmp", "rgb32bf.bmp")
 void testGoodBMPImages(string fileName) {
     auto image = load!32("test/bmp_suite/g/" ~ fileName);
     assert(image !is null);

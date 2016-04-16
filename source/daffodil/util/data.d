@@ -110,6 +110,7 @@ void maskedLoad(R, T)(real[] target, R range, T[] mask, size_t bpp) {
 
     // TODO: Actually implement this, ie. no special case
     enforce!NotSupported(bpp % 8 == 0);
+    enforce!NotSupported(data.length >= 3);
     target[0] = data[2] / 255f;
     target[1] = data[1] / 255f;
     target[2] = data[0] / 255f;

@@ -130,7 +130,9 @@ auto loadImage(R)(R data, MetaData meta) if (isInputRange!R &&
                "BMP data size does not match image dimensions");
 
     // Compressions methods are not yet supported
-    enforce!NotSupported(dibHeader.compression == CompressionMethod.RGB);
+    import unit_threaded.io; writelnUt(dibHeader.compression);
+    enforce!NotSupported(dibHeader.compression == CompressionMethod.RGB ||
+                         dibHeader.compression == CompressionMethod.BITFIELDS);
 
     // V5 has a ICC color profile, not yet supported
     enforce!NotSupported(dibVersion != DibVersion.V5);
