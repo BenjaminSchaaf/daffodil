@@ -87,3 +87,14 @@ struct DibHeader(DibVersion version_ = DibVersion.V5) {
 
     mixin Upcast;
 }
+
+struct DibColorMask(bool alpha = true) {
+@(Endianess.little):
+    uint redMask;
+    uint greenMask;
+    uint blueMask;
+
+    static if (alpha) {
+        uint alphaMask;
+    }
+}

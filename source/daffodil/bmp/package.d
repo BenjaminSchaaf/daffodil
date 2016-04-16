@@ -11,6 +11,7 @@ import std.traits;
 import std.bitmanip;
 import std.typecons;
 import std.algorithm;
+import core.bitop;
 
 import daffodil;
 import daffodil.util.data;
@@ -88,8 +89,8 @@ auto load(PixelFmt, T)(T loadeable) if(isLoadable!T) {
 
 // The default rgba masks for common formats
 private enum DEFAULT_MASKS = [
-    16 : tuple(    0x0_F_0_0u,     0x0_0_F_0u,     0x0_0_0_Fu,     0xF_0_0_0u),
-    24 : tuple(   0x00_00_FFu,    0x00_FF_00u,    0xFF_00_00u,    0x00_00_00u),
+    16 : tuple(0x0F_00_00_00u, 0x00_F0_00_00u, 0x00_0F_00_00u, 0xF0_00_00_00u),
+    24 : tuple(0x00_00_FF_00u, 0x00_FF_00_00u, 0xFF_00_00_00u, 0x00_00_00_00u),
     32 : tuple(0x00_FF_00_00u, 0x00_00_FF_00u, 0x00_00_00_FFu, 0xFF_00_00_00u),
 ];
 
@@ -140,8 +141,15 @@ auto loadImage(R)(R data, MetaData meta) if (isInputRange!R &&
     enforce!NotSupported(dibHeader.colorsUsed == 0);
     enforce!NotSupported(dibHeader.bitCount > 8);
 
+    // Use special color mask for special compression method
+    if (dibHeader.compression == CompressionMethod.BITFIELDS) {
+        auto mask = parseHeader!(DibColorMask!false)(data);
+        dibHeader.redMask   = mask.redMask;
+        dibHeader.greenMask = mask.greenMask;
+        dibHeader.blueMask  = mask.blueMask;
+    }
     // Default RGB masks, as early versions didn't have them
-    if (dibVersion <= DibVersion.INFO) {
+    else if (dibVersion <= DibVersion.INFO) {
         checkValid((dibHeader.bitCount in DEFAULT_MASKS) != null,
                    "BMP header uses non-standard bpp without color masks");
         auto mask = DEFAULT_MASKS[dibHeader.bitCount];
@@ -151,12 +159,14 @@ auto loadImage(R)(R data, MetaData meta) if (isInputRange!R &&
         dibHeader.alphaMask = mask[3];
     }
 
-    uint[] masks;
-    foreach (mask; [dibHeader.redMask, dibHeader.greenMask,
-                    dibHeader.blueMask, dibHeader.alphaMask]) {
-        if (mask != 0) {
-            masks ~= mask;
-        }
+    uint[] masks = [dibHeader.redMask, dibHeader.greenMask, dibHeader.blueMask];
+    if (dibHeader.alphaMask != 0) {
+        masks ~= dibHeader.alphaMask;
+    }
+
+    // Validate color masks
+    foreach (mask; masks) {
+        checkValid(mask != 0, "Color mask is 0");
     }
 
     return maskedRasterLoad(data, masks, dibHeader.bitCount,
