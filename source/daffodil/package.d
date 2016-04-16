@@ -41,21 +41,21 @@ auto detectFormat(T)(T loadeable) if (isLoadeable!T) {
  * Documentation
  */
 auto loadMeta(T : DataRange)(T data) {
-    auto format = detectFormat(data.save);
+    auto format = detectFormat(data);
     return format.loadMeta(data);
 }
 /// Ditto
-auto loadMeta(T)(T loadeable) if (isLoadeable!T) {
-    return loadMeta(dataLoad(loadeable));
+auto loadMeta(T)(T loadeable, ref Format format = null) if (isLoadeable!T) {
+    return loadMeta(dataLoad(loadeable), format);
 }
 
 /**
  * Documentation
  */
-auto load(size_t bpc, T : DataRange)(T data, MetaData meta = null) {
+auto load(size_t bpc, T : DataRange)(T data) {
     import std.stdio;
-    auto format = detectFormat(data.save);
-    if (meta is null) meta = format.loadMeta(data);
+    auto format = detectFormat(data);
+    auto meta = format.loadMeta(data);
     return new Image!bpc(format.loadImage(data, meta), new RGB!bpc);
 }
 /// Ditto
@@ -63,7 +63,7 @@ auto load(size_t bpc, T)(T loadeable) if (isLoadeable!T) {
     return load!bpc(dataLoad(loadeable));
 }
 
-alias DataRange = ForwardRange!ubyte;
+alias DataRange = InputRange!ubyte;
 
 /**
  * Documentation

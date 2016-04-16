@@ -76,6 +76,8 @@ auto loadMeta(T : Loadeable)(T loadeable) if(isLoadable!T) {
  * Documentation
  */
 auto load(PixelFmt, T : DataRange)(T data, MetaData meta = null) {
+    enforce!InvalidImageType(check(data), "Data does not contain a bmp image.");
+
     if (meta is null) meta = loadMeta(data);
     return new Image!PixelFmt(loadImage(data, meta));
 }
@@ -96,8 +98,6 @@ private enum DEFAULT_MASKS = [
  */
 auto loadImage(R)(R data, MetaData meta) if (isInputRange!R &&
                                              is(ElementType!R == ubyte)) {
-    enforce!InvalidImageType(check(data), "Data does not contain a bmp image.");
-
     auto bmpHeader = parseHeader!BmpHeader(data);
     auto dibVersion = cast(DibVersion)parseHeader!uint(data);
 

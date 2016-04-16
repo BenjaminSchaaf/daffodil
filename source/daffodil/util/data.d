@@ -21,7 +21,7 @@ private const FILE_CHUNK_SIZE = 4096;
   * Useful for providing simple overloading of load functions for a variety of inputs.
   */
 DataRange dataLoad(File file) {
-    return file.byChunk(FILE_CHUNK_SIZE).joiner.bufferRange.inputRangeObject;
+    return file.byChunk(FILE_CHUNK_SIZE).joiner.inputRangeObject;
 }
 /// Ditto
 DataRange dataLoad(string path) {
@@ -71,7 +71,6 @@ ImageRange!PixelData maskedRasterLoad(R, T)(
         }
 
         @property PixelData front() {
-            import unit_threaded.io; writelnUt(x, ", ", y);
             // TODO: Make this happen in popFront
             maskedLoad(loadBuffer, data, mask, bpp);
 
