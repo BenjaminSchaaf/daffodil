@@ -37,7 +37,7 @@ Image Functions
     .. todo:: docs
 
 .. d:function::
-    Image!bpc load(size_t bpc, T : DataRange)(T data, MetaData meta = null)
+    Image!bpc load(size_t bpc, T : DataRange)(T data)
     Image!bpc load(size_t bpc, T : Loadeable) if (isLoadable!T)
     :name: load
 
