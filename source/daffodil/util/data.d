@@ -8,6 +8,7 @@ import std.meta;
 import std.stdio;
 import std.typecons;
 import std.algorithm;
+import core.bitop;
 
 import daffodil;
 import daffodil.util.types;
@@ -104,14 +105,19 @@ ImageRange!PixelData maskedRasterLoad(R, T)(
     return Range(data).imageRangeObject;
 }
 
-void maskedLoad(R, T)(real[] target, R range, T[] mask, size_t bpp) {
+void maskedLoad(R, T)(real[] target, R range, T[] masks, size_t bpp) {
     auto data = range.take(bpp / 8).array;
     enforce!UnexpectedEndOfData(data.length == bpp / 8);
 
-    // TODO: Actually implement this, ie. no special case
-    enforce!NotSupported(bpp % 8 == 0);
-    enforce!NotSupported(data.length >= 3);
-    target[0] = data[2] / 255f;
-    target[1] = data[1] / 255f;
-    target[2] = data[0] / 255f;
+    foreach (maskIndex, mask; masks) {
+        auto bitStart = T.sizeof * 8 - bsr(mask) - 1;
+        auto bitEnd = T.sizeof * 8 - bsf(mask);
+
+        auto max = pow(2f, bitEnd - bitStart) - 1f;
+        target[maskIndex] = 0;
+        // TODO: Optimise
+        foreach (index, value; data) {
+            target[maskIndex] += (value >> (bitStart - index * 8)) / max;
+        }
+    }
 }
