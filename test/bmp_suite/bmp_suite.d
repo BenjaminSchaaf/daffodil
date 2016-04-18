@@ -13,12 +13,17 @@ import daffodil;
   "pal8nonsquare.bmp", "pal8rle.bmp", "pal8v4.bmp", "pal8w124.bmp",
   "pal8w126.bmp", "rgb16-565pal.bmp")
 void testGoodBMPImagesFail(string fileName) {
-  testGoodBMPImages(fileName);
+    testGoodBMPImages(fileName);
 }
 
 @("rgb24.bmp", "rgb32.bmp", "rgb32bf.bmp", "rgb16.bmp", "rgb16-565.bmp")
 void testGoodBMPImages(string fileName) {
-    auto image = load!32("test/bmp_suite/g/" ~ fileName);
+    auto file = "test/bmp_suite/g/" ~ fileName;
+
+    auto meta = loadMeta(file);
+    assert(meta !is null);
+
+    auto image = load!32(file);
     assert(image !is null);
 }
 
