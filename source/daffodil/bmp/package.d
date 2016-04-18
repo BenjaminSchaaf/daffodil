@@ -1,6 +1,8 @@
 module daffodil.bmp;
 
 public {
+    import daffodil.bmp.meta;
+
     static {
         import headers = daffodil.bmp.headers;
     }
@@ -43,7 +45,7 @@ bool check(R)(R data) if (isInputRange!R &&
     return equal(data.takeExactly(2), [0x42, 0x4D]);
 }
 /// Ditto
-bool check(T : Loadeable)(T loadeable) if(isLoadable!T) {
+bool check(T)(T loadeable) if (isLoadeable!T) {
     return check(dataLoad(loadeable));
 }
 
@@ -57,25 +59,6 @@ unittest {
 /**
  * Documentation
  */
-class BMPMetaData : MetaData {
-
-}
-
-/**
- * Documentation
- */
-BMPMetaData loadMeta(R)(R data) if (isInputRange!R &&
-                                    is(ElementType!R == ubyte)) {
-    return null;
-}
-/// Ditto
-auto loadMeta(T : Loadeable)(T loadeable) if(isLoadable!T) {
-    return loadMeta(dataLoad(loadeable));
-}
-
-/**
- * Documentation
- */
 auto load(PixelFmt, T : DataRange)(T data, MetaData meta = null) {
     enforce!InvalidImageType(check(data), "Data does not contain a bmp image.");
 
@@ -83,7 +66,7 @@ auto load(PixelFmt, T : DataRange)(T data, MetaData meta = null) {
     return new Image!PixelFmt(loadImage(data, meta));
 }
 /// Ditto
-auto load(PixelFmt, T)(T loadeable) if(isLoadable!T) {
+auto load(PixelFmt, T)(T loadeable) if (isLoadeable!T) {
     return load!PixelFmt(dataLoad(loadeable));
 }
 
@@ -97,8 +80,8 @@ private enum DEFAULT_MASKS = [
 /**
  * Documentation
  */
-auto loadImage(R)(R data, MetaData meta) if (isInputRange!R &&
-                                             is(ElementType!R == ubyte)) {
+BmpMetaData loadMeta(R)(R data) if (isInputRange!R &&
+                                    is(ElementType!R == ubyte)) {
     auto bmpHeader = parseHeader!BmpHeader(data);
     auto dibVersion = cast(DibVersion)parseHeader!uint(data);
 
@@ -169,6 +152,31 @@ auto loadImage(R)(R data, MetaData meta) if (isInputRange!R &&
         checkValid(mask != 0, "Color mask is 0");
     }
 
-    return maskedRasterLoad(data, masks, dibHeader.bitCount,
-                            dibHeader.width, -dibHeader.height, 4);
+    return new BmpMetaData(dibHeader.width, abs(dibHeader.height),
+                           bmpHeader, dibVersion, dibHeader);
+}
+/// Ditto
+auto loadMeta(T)(T loadeable) if (isLoadeable!T) {
+    return loadMeta(dataLoad(loadeable));
+}
+
+/**
+ * Documentation
+ */
+auto loadImage(R)(R data, MetaData _meta) if (isInputRange!R &&
+                                                is(ElementType!R == ubyte)) {
+    auto meta = cast(BmpMetaData)_meta;
+
+    auto dib = meta.dibHeader;
+    uint[] masks = [dib.redMask, dib.greenMask, dib.blueMask];
+    if (dib.alphaMask != 0) {
+        masks ~= dib.alphaMask;
+    }
+
+    return maskedRasterLoad(data, masks, dib.bitCount,
+                            dib.width, -dib.height, 4);
+}
+/// Ditto
+auto loadImage(T)(T loadeable, MetaData meta) if (isLoadeable!T) {
+    return loadImage(dataLoad(loadeable), meta);
 }
