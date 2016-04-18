@@ -6,16 +6,21 @@ module daffodil.util.range;
 public import std.range;
 
 template isImageRange(R) {
-    enum bool isImageRange = isInputRange!R && hasImageRangeAttrs!R;
-}
-
-private template hasImageRangeAttrs(R) {
-    enum bool hasImageRangeAttrs = is(typeof(
+    enum bool isImageRange = isInputRange!R && is(typeof(
         (inout int = 0) {
             R r = R.init;
             size_t w = r.width;
             size_t h = r.height;
             size_t c = r.channelCount;
+        }
+    ));
+}
+
+template isRandomAccessImageRange(R) {
+    enum bool isRandomAccessImageRange = isImageRange!R && is(typeof(
+        (inout int = 0) {
+            R r = R.init;
+            ElementType!R e = r[0, 0];
         }
     ));
 }
@@ -26,7 +31,19 @@ interface ImageRange(E) : InputRange!E {
     @property size_t channelCount();
 }
 
-class ImageRangeObject(R) : ImageRange!(ElementType!R) {
+unittest {
+    static assert(isImageRange!(ImageRange!int));
+}
+
+interface RandomAccessImageRange(E) : ImageRange!E {
+    E opIndex(size_t x, size_t y);
+}
+
+unittest {
+    static assert(isRandomAccessImageRange!(RandomAccessImageRange!int));
+}
+
+class ImageRangeObject(R) : ImageRange!(ElementType!R) if (isImageRange!R) {
     private alias E = ElementType!R;
 
     private R _range;
@@ -71,10 +88,19 @@ class ImageRangeObject(R) : ImageRange!(ElementType!R) {
 
         return res;
     }
+
+    static if (isRandomAccessImageRange!R) {
+
+        E opIndex(size_t x, size_t y) {
+            return _range[x, y];
+        }
+
+    }
 }
 
 unittest {
-    static assert(isImageRange!(ImageRange!int));
+    static assert(isImageRange!(ImageRangeObject!(ImageRange!int)));
+    static assert(isRandomAccessImageRange!(ImageRangeObject!(RandomAccessImageRange!int)));
 }
 
 ImageRangeObject!R imageRangeObject(R)(R range) if (isImageRange!R) {
