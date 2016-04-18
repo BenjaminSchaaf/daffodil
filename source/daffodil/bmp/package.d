@@ -166,6 +166,7 @@ auto loadMeta(T)(T loadeable) if (isLoadeable!T) {
 auto loadImage(R)(R data, MetaData _meta) if (isInputRange!R &&
                                                 is(ElementType!R == ubyte)) {
     auto meta = cast(BmpMetaData)_meta;
+    enforce!ImageException(meta !is null, "Cannot load bmp Image without bmp Meta Data");
 
     auto dib = meta.dibHeader;
     uint[] masks = [dib.redMask, dib.greenMask, dib.blueMask];
