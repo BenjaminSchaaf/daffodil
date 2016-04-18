@@ -26,11 +26,16 @@ public {
  */
 Format detectFormat(T : DataRange)(T data) {
     foreach (format; formats) {
-        if (format.check(data)) {
-            return format;
+        try {
+            if (format.check(data)) {
+                return format;
+            }
+        } catch (ImageException e) {
+            continue;
         }
+
     }
-    assert(false);
+    throw new NotSupported("Unknown Format");
 }
 /// Ditto
 auto detectFormat(T)(T loadeable) if (isLoadeable!T) {
