@@ -40,9 +40,10 @@ static this() {
  */
 bool check(R)(R data) if (isInputRange!R &&
                           is(ElementType!R == ubyte)) {
-    // Take a 'save' of the range, so we don't alter our input
+    auto taken = data.take(2).array;
+    enforce!UnexpectedEndOfData(taken.length == 2);
     // Make sure data starts with "BM"
-    return equal(data.takeExactly(2), [0x42, 0x4D]);
+    return equal(taken, [0x42, 0x4D]);
 }
 /// Ditto
 bool check(T)(T loadeable) if (isLoadeable!T) {
@@ -59,15 +60,15 @@ unittest {
 /**
  * Documentation
  */
-auto load(PixelFmt, T : DataRange)(T data, MetaData meta = null) {
+auto load(size_t bpc, T : DataRange)(T data, MetaData meta = null) {
     enforce!InvalidImageType(check(data), "Data does not contain a bmp image.");
 
     if (meta is null) meta = loadMeta(data);
-    return new Image!PixelFmt(loadImage(data, meta));
+    return new Image!bpc(loadImage(data, meta), new RGB!bpc());
 }
 /// Ditto
-auto load(PixelFmt, T)(T loadeable) if (isLoadeable!T) {
-    return load!PixelFmt(dataLoad(loadeable));
+auto load(size_t bpc, T)(T loadeable) if (isLoadeable!T) {
+    return load!bpc(dataLoad(loadeable));
 }
 
 // The default rgba masks for common formats

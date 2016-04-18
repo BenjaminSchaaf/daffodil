@@ -10,6 +10,8 @@ import std.traits;
 import std.bitmanip;
 import std.algorithm;
 
+import daffodil.util.errors;
+
 /**
  * Attribute signifying the endianess of a field or type
  */
@@ -57,7 +59,10 @@ T parseHeader(T, Endianess e = Endianess.little, R)(R data) if (convertable!T &&
         }
         return value;
     } else {
-        ubyte[T.sizeof] fieldData = data.takeExactly(T.sizeof).array[0..T.sizeof];
+        auto taken = data.take(T.sizeof).array;
+        enforce!UnexpectedEndOfData(taken.length == T.sizeof);
+
+        ubyte[T.sizeof] fieldData = taken.array[0..T.sizeof];
 
         static if (e is Endianess.little) {
             return littleEndianToNative!T(fieldData);
