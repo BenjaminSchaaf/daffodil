@@ -110,8 +110,7 @@ class Image(size_t bpc_) {
     }
 
     override string toString() const {
-        import std.format;
-        return format("%s", raster);
+        return raster.to!string;
     }
 }
 
@@ -130,4 +129,10 @@ unittest {
     assert(image.size == [123, 234]);
     assert(image.opDollar!0 == 123);
     assert(image.opDollar!1 == 234);
+}
+
+@("Image to string")
+unittest {
+    auto image = new Image!32(2, 2, 3, new RGB!32);
+    assert(image.toString == "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
 }
