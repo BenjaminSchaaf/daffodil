@@ -1,4 +1,4 @@
-module bmp;
+module testbmp;
 
 import daffodil;
 import bmp = daffodil.bmp;

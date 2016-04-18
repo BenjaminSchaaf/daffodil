@@ -1,4 +1,4 @@
-module all;
+module testall;
 
 import daffodil;
 import unit_threaded;

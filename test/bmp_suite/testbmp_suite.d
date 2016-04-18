@@ -1,4 +1,4 @@
-module bmp_suite.bmp_suite;
+module bmp_suite.testbmp_suite;
 
 import std.file;
 import std.format;
