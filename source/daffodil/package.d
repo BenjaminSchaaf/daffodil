@@ -45,8 +45,8 @@ auto loadMeta(T : DataRange)(T data) {
     return format.loadMeta(data);
 }
 /// Ditto
-auto loadMeta(T)(T loadeable, ref Format format = null) if (isLoadeable!T) {
-    return loadMeta(dataLoad(loadeable), format);
+auto loadMeta(T)(T loadeable) if (isLoadeable!T) {
+    return loadMeta(dataLoad(loadeable));
 }
 
 /**
