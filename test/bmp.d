@@ -1,8 +1,18 @@
+module bmp;
+
+import daffodil;
+import bmp = daffodil.bmp;
+import unit_threaded;
+
+@("fails on empty file")
+unittest {
+    shouldThrow!(ImageException)(
+        bmp.load!8("test/images/empty.file")
+    );
+}
+
 @("load BMP meta data")
 unittest {
-    import daffodil;
-    import bmp = daffodil.bmp;
-
     auto meta = loadMeta("test/images/bmp_small-24bpp.bmp");
     assert(meta !is null);
     assert(meta.width);
@@ -12,8 +22,6 @@ unittest {
 
 @("load BMP image data")
 unittest {
-    import daffodil;
-
     auto image = load!8("test/images/bmp_small-24bpp.bmp");
     assert(image !is null);
     assert(image.width == 41);
