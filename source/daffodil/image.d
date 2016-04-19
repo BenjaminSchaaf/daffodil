@@ -24,6 +24,7 @@ class Image(size_t bpc_) {
      * Storage type for each value in a channel
      */
     alias Value = Integer!bpc;
+    enum maxValue = pow(2, bpc) - 1;
 
     private {
         size_t[2] _size;
@@ -94,7 +95,7 @@ class Image(size_t bpc_) {
         assert(values.length == channelCount);
         auto index = (x + y * width) * channelCount;
         foreach (i; 0..channelCount) {
-            raster[index + i] = cast(Value)(values[i] * Value.max);
+            raster[index + i] = cast(Value)(values[i] * maxValue);
         }
     }
 
@@ -105,7 +106,7 @@ class Image(size_t bpc_) {
         return Pixel!bpc(channelCount, colorSpace);
     }
 
-    @property Image!bpc dup() const {
+    @property Image dup() const {
         return new Image(this);
     }
 
