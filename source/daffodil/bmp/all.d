@@ -29,7 +29,7 @@ static this() {
         "BMP",
         &check!DataRange,
         &loadMeta!DataRange,
-        &loadImage!DataRange,
+        (d, m) => loadImage!DataRange(d, cast(BmpMetaData)m).imageRangeObject,
         null,
         [".bmp", ".dib"],
     ));
@@ -60,7 +60,7 @@ unittest {
 /**
  * Documentation
  */
-auto load(size_t bpc, T : DataRange)(T data, MetaData meta = null) {
+auto load(size_t bpc, T : DataRange)(T data, BmpMetaData meta = null) {
     enforce!InvalidImageType(check(data), "Data does not contain a bmp image.");
 
     if (meta is null) meta = loadMeta(data);
@@ -164,9 +164,8 @@ auto loadMeta(T)(T loadeable) if (isLoadeable!T) {
 /**
  * Documentation
  */
-auto loadImage(R)(R data, MetaData _meta) if (isInputRange!R &&
+auto loadImage(R)(R data, BmpMetaData meta) if (isInputRange!R &&
                                                 is(ElementType!R == ubyte)) {
-    auto meta = cast(BmpMetaData)_meta;
     enforce!ImageException(meta !is null, "Cannot load bmp Image without bmp Meta Data");
 
     auto dib = meta.dibHeader;
