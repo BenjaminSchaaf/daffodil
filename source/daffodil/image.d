@@ -119,6 +119,33 @@ class Image(size_t bpc_) {
     override string toString() const {
         return raster.to!string;
     }
+
+    @property auto range() const {
+        struct Range {
+            const Image image;
+            real[] outBuffer;
+
+            this(const Image image) {
+                this.image = image;
+                outBuffer = new real[channelCount];
+            }
+            @property auto width() { return image.width; }
+            @property auto height() { return image.height;}
+            @property auto channelCount() { return image.channelCount; }
+            @property auto front() { return outBuffer; }
+            @property auto empty() { return false; }
+            void popFront() {}
+            real[] opIndex(size_t x, size_t y) {
+                auto color = image[x, y];
+                foreach (index; 0..channelCount) {
+                    outBuffer[index] = color[index] / cast(real)maxValue;
+                }
+                return outBuffer;
+            }
+        }
+
+        return Range(this);
+    }
 }
 
 @("Image bpp property")
@@ -142,4 +169,9 @@ unittest {
 unittest {
     auto image = new Image!32(2, 2, 3, new RGB!32);
     assert(image.toString == "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+}
+
+@("Image range")
+unittest {
+    static assert(isRandomAccessImageRange!(typeof(Image!8.range)));
 }
