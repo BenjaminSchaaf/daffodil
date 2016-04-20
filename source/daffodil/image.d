@@ -26,6 +26,8 @@ class Image(size_t bpc_) {
     alias Value = Integer!bpc;
     enum maxValue = pow(2, bpc) - 1;
 
+    MetaData meta;
+
     private {
         size_t[2] _size;
         size_t    _channelCount;
@@ -38,18 +40,22 @@ class Image(size_t bpc_) {
      * Create an empty Image given a width and a height.
      * Pixels default to `init`
      */
-    this(size_t width, size_t height, size_t channelCount, ColorSpace!bpc colorSpace) {
+    this(size_t width, size_t height, size_t channelCount,
+         ColorSpace!bpc colorSpace, MetaData meta = null) {
         _size = [width, height];
         this._channelCount = channelCount;
         this.colorSpace = colorSpace;
         raster.length = width * height * channelCount;
+        this.meta = meta;
     }
 
     /**
      * Documentation
      */
-    this(R)(R range, ColorSpace!bpc colorSpace) if (isImageRange!R && is(ElementType!R == PixelData)) {
-        this(range.width, range.height, range.channelCount, colorSpace);
+    this(R)(R range, ColorSpace!bpc colorSpace,
+            MetaData meta = null) if (isImageRange!R &&
+                                      is(ElementType!R == PixelData)) {
+        this(range.width, range.height, range.channelCount, colorSpace, meta);
 
         foreach (pixel; range) {
             this[pixel.x, pixel.y] = pixel.data;
