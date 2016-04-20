@@ -110,3 +110,22 @@ ImageRangeObject!R imageRangeObject(R)(R range) if (isImageRange!R) {
         return new ImageRangeObject!R(range);
     }
 }
+
+class Iter(R) if (isRandomAccessRange!R) {
+    private R range;
+
+    this(R r) {
+        range = r;
+    }
+
+    void popFront() {
+        range = range[1..$];
+    }
+
+    @property bool empty() { return range.length == 0; }
+    @property ubyte front() { return range[0]; }
+}
+
+auto iter(R)(R range) if (isRandomAccessRange!R) {
+    return new Iter!R(range);
+}

@@ -3,13 +3,13 @@
  */
 module daffodil.util.headers;
 
-import std.range;
 import std.array;
 import std.meta;
 import std.traits;
 import std.bitmanip;
 import std.algorithm;
 
+import daffodil.util.range;
 import daffodil.util.errors;
 
 /**
@@ -82,16 +82,7 @@ unittest {
 
     ubyte[] data = [0xDE, 0xAD, 0xAD, 0xDE];
 
-    class Iter {
-        ubyte[] _range;
-        this(ubyte[] d) { _range = d; }
-        void popFront() {
-            _range = _range[1..$]; }
-        @property bool empty() { return _range.length == 0; }
-        @property ubyte front() { return _range[0]; }
-    }
-
-    Data d = parseHeader!(Data, Endianess.big)(new Iter(data));
+    Data d = parseHeader!(Data, Endianess.big)(data.iter);
     assert(d.field1 == 0xDEAD);
     assert(d.field2 == 0xDEAD);
 }
