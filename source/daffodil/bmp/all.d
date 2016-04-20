@@ -64,7 +64,7 @@ auto load(size_t bpc, T : DataRange)(T data, BmpMetaData meta = null) {
     enforce!InvalidImageType(check(data), "Data does not contain a bmp image.");
 
     if (meta is null) meta = loadMeta(data);
-    return new Image!bpc(loadImage(data, meta), new RGB!bpc());
+    return new Image!bpc(loadImage(data, meta), new RGB!bpc(), meta);
 }
 /// Ditto
 auto load(size_t bpc, T)(T loadeable) if (isLoadeable!T) {
@@ -178,6 +178,6 @@ auto loadImage(R)(R data, BmpMetaData meta) if (isInputRange!R &&
                             dib.width, -dib.height, 4);
 }
 /// Ditto
-auto loadImage(T)(T loadeable, MetaData meta) if (isLoadeable!T) {
+auto loadImage(T)(T loadeable, BmpMetaData meta) if (isLoadeable!T) {
     return loadImage(dataLoad(loadeable), meta);
 }
