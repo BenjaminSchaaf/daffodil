@@ -35,6 +35,9 @@ static this() {
     ));
 }
 
+// Magic Number "BM"
+const ubyte[] MAGIC_NUMBER = [0x42, 0x4D];
+
 /**
  * Documentation
  */
@@ -42,8 +45,8 @@ bool check(R)(R data) if (isInputRange!R &&
                           is(ElementType!R == ubyte)) {
     auto taken = data.take(2).array;
     enforce!UnexpectedEndOfData(taken.length == 2);
-    // Make sure data starts with "BM"
-    return equal(taken, [0x42, 0x4D]);
+    // Make sure data starts with the magic number
+    return taken == MAGIC_NUMBER;
 }
 /// Ditto
 bool check(T)(T loadeable) if (isLoadeable!T) {
@@ -180,4 +183,38 @@ auto loadImage(R)(R data, BmpMetaData meta) if (isInputRange!R &&
 /// Ditto
 auto loadImage(T)(T loadeable, BmpMetaData meta) if (isLoadeable!T) {
     return loadImage(dataLoad(loadeable), meta);
+}
+
+/**
+ * Documentation
+ */
+void save(size_t bpc, R)(Image!bpc image, R output) if (isOutputRange!(R, ubyte)) {
+    saveImage(output, image.range, cast(BmpMetaData)image.meta);
+}
+
+/**
+ * Documentation
+ */
+void saveImage(R, I)(R output, I image, BmpMetaData meta) if (isOutputRange!(R, ubyte) &&
+                                                              isRandomAccessImageRange!I) {
+    if (meta is null) {
+        // TODO: Default
+        assert(false);
+    }
+
+    output.put(MAGIC_NUMBER);
+    // TODO: Validation
+    writeHeader(meta.bmpHeader, output);
+    writeHeader(meta.dibVersion, output);
+
+    foreach (ver; EnumMembers!DibVersion) {
+        if (meta.dibVersion == ver) {
+            writeHeader(cast(DibHeader!ver)meta.dibHeader, output);
+        }
+    }
+}
+/// Ditto
+void saveImage(T, I)(T saveable, I image, BmpMetaData meta) if (isSaveable!T &&
+                                                                isRandomAccessImageRange!I) {
+    return saveImage(dataSave(saveable), image, meta);
 }

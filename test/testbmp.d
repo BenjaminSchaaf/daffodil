@@ -31,3 +31,20 @@ unittest {
     assert(image[10, 30] == [255,   0,   0]);
     assert(image[30, 30] == [255, 255, 255]);
 }
+
+@("save same BMP image")
+unittest {
+    import std.stdio;
+    import daffodil.util.range;
+    import std.outbuffer;
+    import std.algorithm;
+
+    auto imageData = File("test/images/bmp_small-24bpp.bmp").byChunk(4096).joiner.array;
+    auto image = load!8(imageData.iter);
+
+    auto buffer = new OutBuffer();
+    bmp.save(image, buffer);
+
+    // TODO: Compare entire file once image data is written
+    assert(buffer.toBytes() == imageData[0..54]);
+}

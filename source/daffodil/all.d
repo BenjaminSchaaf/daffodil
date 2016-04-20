@@ -69,7 +69,23 @@ auto load(size_t bpc, T)(T loadeable) if (isLoadeable!T) {
     return load!bpc(dataLoad(loadeable));
 }
 
+/**
+ * Documentation
+ */
+auto save(size_t bpc, T)(const Image!bpc image, T data) if (isOutRange!T) {
+
+}
+/// Ditto
+void save(size_t bpc, T)(const Image!bpc image, T saveable) if (isSaveable!T) {
+    return save(image, dataSave(saveable));
+}
+
 alias DataRange = InputRange!ubyte;
+template isDataRange(T) {
+    enum isDataRange = isInputRange!T && is(ElementType!T == ubyte);
+}
+alias OutRange = OutputRange!ubyte;
+alias isOutRange(T) = isOutputRange!(T, ubyte);
 
 /**
  * Documentation
@@ -79,7 +95,7 @@ struct Format {
     bool function(DataRange) check;
     MetaData function(DataRange) loadMeta;
     ImageRange!PixelData function(DataRange, MetaData) loadImage;
-    void function(OutputRange!ubyte, ImageRange!PixelData, MetaData) save;
+    void function(OutputRange!ubyte, RandomAccessImageRange!(real[]), MetaData) save;
     string[] extensions;
 }
 
