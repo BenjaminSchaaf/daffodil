@@ -43,7 +43,7 @@ struct PixelData {
 /**
  * Documentation
  */
-ImageRange!PixelData maskedRasterLoad(R, T)(
+auto maskedRasterLoad(R, T)(
         R data,
         T[] mask,
         size_t bpp,
@@ -102,7 +102,7 @@ ImageRange!PixelData maskedRasterLoad(R, T)(
         @property size_t height() { return abs(_height); }
     }
 
-    return Range(data).imageRangeObject;
+    return Range(data);
 }
 
 void maskedLoad(R, T)(real[] target, R range, T[] masks, size_t bpp) {
