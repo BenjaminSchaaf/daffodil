@@ -35,6 +35,29 @@ template isLoadeable(E) {
     enum isLoadeable = staticIndexOf!(E, Loadeable) != -1;
 }
 
+/**
+ * Converts any sort of possible output into a output range.
+ * Useful for providing simple overloading of save functions  for a variety of outputs.
+ */
+OutRange dataSave(File file) {
+    struct F {
+        File f;
+        this(File f) { this.f = f; }
+        void put(ubyte data) { f.write(data); }
+    }
+    return F(file).outputRangeObject!ubyte;
+}
+/// Ditto
+OutRange dataSave(string path) {
+    return dataSave(File(path, "w"));
+}
+
+alias Saveable = AliasSeq!(File, string);
+
+template isSaveable(E) {
+    enum isSaveable = staticIndexOf!(E, Saveable) != -1;
+}
+
 struct PixelData {
     size_t x, y;
     real[] data;
