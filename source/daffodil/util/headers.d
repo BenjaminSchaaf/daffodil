@@ -43,7 +43,7 @@ template convertable(T) {
 }
 
 /**
- * Given a type and endianess, convert a ubyte[] to that type.
+ * Given a type and endianess, convert a input range of ubyte to that type.
  * Does not support any dynamically sized types or non-standard alignments
  */
 T parseHeader(T, Endianess e = Endianess.little, R)(R data) if (convertable!T &&
@@ -94,6 +94,47 @@ unittest {
     Data d = parseHeader!(Data, Endianess.big)(new Iter(data));
     assert(d.field1 == 0xDEAD);
     assert(d.field2 == 0xDEAD);
+}
+
+/**
+ * Given a instance and default endianess, write that instance to a output range of ubyte.
+ */
+void writeHeader(Endianess e = Endianess.little, T, R)(T value, R output) if (convertable!T &&
+                                                                             isOutputRange!(R, ubyte)) {
+    static if (isAggregateType!T) {
+        foreach (field; FieldNameTuple!T) {
+            enum member = "value."~field;
+            enum endian = endianess!(mixin(member), e);
+            writeHeader!endian(mixin(member), output);
+        }
+    } else {
+        ubyte[T.sizeof] fieldData;
+
+        static if (e is Endianess.little) {
+            fieldData = nativeToLittleEndian(value);
+        } else {
+            fieldData = nativeToBigEndian(value);
+        }
+
+        output.put(fieldData);
+    }
+}
+
+@("Able to write headers")
+unittest {
+    import std.outbuffer;
+    static struct Data {
+        ushort field1;
+        @(Endianess.little)
+        ushort field2;
+    }
+
+    Data d = { field1: 0xDEAD, field2: 0xDEAD };
+    auto buffer = new OutBuffer();
+    writeHeader!(Endianess.big)(d, buffer);
+
+    ubyte[] data = [0xDE, 0xAD, 0xAD, 0xDE];
+    assert(buffer.toBytes() == data);
 }
 
 /**
