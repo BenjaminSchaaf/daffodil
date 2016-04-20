@@ -24,10 +24,11 @@ public {
 /**
  * Documentation
  */
-Format detectFormat(T : DataRange)(T data) {
+Format detectFormat(T)(T data) if (isDataRange!T) {
+    auto range = data.inputRangeObject;
     foreach (format; formats) {
         try {
-            if (format.check(data)) {
+            if (format.check(range)) {
                 return format;
             }
         } catch (ImageException e) {
@@ -45,7 +46,7 @@ auto detectFormat(T)(T loadeable) if (isLoadeable!T) {
 /**
  * Documentation
  */
-auto loadMeta(T : DataRange)(T data) {
+auto loadMeta(T)(T data) if (isDataRange!T) {
     auto format = detectFormat(data);
     return format.loadMeta(data);
 }
@@ -57,11 +58,11 @@ auto loadMeta(T)(T loadeable) if (isLoadeable!T) {
 /**
  * Documentation
  */
-auto load(size_t bpc, T : DataRange)(T data) {
-    import std.stdio;
+auto load(size_t bpc, T)(T data) if (isDataRange!T) {
+    auto range = data.inputRangeObject;
     auto format = detectFormat(data);
-    auto meta = format.loadMeta(data);
-    return new Image!bpc(format.loadImage(data, meta), new RGB!bpc);
+    auto meta = format.loadMeta(range);
+    return new Image!bpc(format.loadImage(range, meta), new RGB!bpc, meta);
 }
 /// Ditto
 auto load(size_t bpc, T)(T loadeable) if (isLoadeable!T) {
