@@ -3,6 +3,7 @@ module daffodil.all;
 import std.path;
 import std.stdio;
 import std.typecons;
+import std.algorithm;
 
 import daffodil.util.data;
 import daffodil.util.range;
