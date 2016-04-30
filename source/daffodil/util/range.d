@@ -43,7 +43,17 @@ unittest {
     static assert(isRandomAccessImageRange!(RandomAccessImageRange!int));
 }
 
-class ImageRangeObject(R) : ImageRange!(ElementType!R) if (isImageRange!R) {
+template MostDerivedImageRange(R) if (isImageRange!R) {
+    alias E = ElementType!R;
+
+    static if (isRandomAccessImageRange!R) {
+        alias MostDerivedImageRange = RandomAccessImageRange!E;
+    } else {
+        alias MostDerivedImageRange = ImageRange!E;
+    }
+}
+
+class ImageRangeObject(R) : MostDerivedImageRange!R if (isImageRange!R) {
     private alias E = ElementType!R;
 
     private R _range;
