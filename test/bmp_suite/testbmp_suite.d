@@ -2,9 +2,14 @@ module bmp_suite.testbmp_suite;
 
 import std.file;
 import std.format;
+import std.algorithm;
 
 import unit_threaded;
 import daffodil;
+
+static this() {
+    mkdirRecurse("build/test/bmp_suite/g/");
+}
 
 @ShouldFail
 @("pal1bg.bmp", "pal1wb.bmp", "pal4gs.bmp", "pal8-0.bmp", "pal8gs.bmp",
@@ -12,12 +17,12 @@ import daffodil;
   "rgb24pal.bmp", "pal1.bmp", "pal4.bmp", "pal4rle.bmp", "pal8.bmp",
   "pal8nonsquare.bmp", "pal8rle.bmp", "pal8v4.bmp", "pal8w124.bmp",
   "pal8w126.bmp", "rgb16-565pal.bmp")
-void testGoodBMPImagesFail(string fileName) {
-    testGoodBMPImages(fileName);
+void testGoodBMPImagesFailLoading(string fileName) {
+    testGoodBMPImagesLoading(fileName);
 }
 
 @("rgb24.bmp", "rgb32.bmp", "rgb32bf.bmp", "rgb16.bmp", "rgb16-565.bmp")
-void testGoodBMPImages(string fileName) {
+void testGoodBMPImagesLoading(string fileName) {
     auto file = "test/bmp_suite/g/" ~ fileName;
 
     auto meta = loadMeta(file);
@@ -25,6 +30,30 @@ void testGoodBMPImages(string fileName) {
 
     auto image = load!32(file);
     assert(image !is null);
+}
+
+@ShouldFail
+@("pal1bg.bmp", "pal1wb.bmp", "pal4gs.bmp", "pal8-0.bmp", "pal8gs.bmp",
+  "pal8os2.bmp", "pal8topdown.bmp", "pal8v5.bmp", "pal8w125.bmp",
+  "rgb24pal.bmp", "pal1.bmp", "pal4.bmp", "pal4rle.bmp", "pal8.bmp",
+  "pal8nonsquare.bmp", "pal8rle.bmp", "pal8v4.bmp", "pal8w124.bmp",
+  "pal8w126.bmp", "rgb16-565pal.bmp", "rgb24.bmp", "rgb32.bmp", "rgb32bf.bmp",
+  "rgb16-565.bmp")
+void testGoodBMPImagesFailSaving(string fileName) {
+    testGoodBMPImagesSaving(fileName);
+}
+
+@("rgb16.bmp")
+void testGoodBMPImagesSaving(string fileName) {
+    auto origPath = "test/bmp_suite/g/" ~ fileName;
+    auto copyPath = "build/" ~ origPath;
+
+    auto image = load!32(origPath);
+    image.save(copyPath);
+
+    auto origData = cast(ubyte[])read(origPath);
+    auto copyData = cast(ubyte[])read(copyPath);
+    assert(cmp(origData, copyData) != 1);
 }
 
 @("badbitcount.bmp", "baddens1.bmp", "badfilesize.bmp", "badpalettesize.bmp",
