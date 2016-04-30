@@ -1,5 +1,6 @@
 module daffodil.all;
 
+import std.path;
 import std.stdio;
 import std.typecons;
 
@@ -42,13 +43,23 @@ Format detectFormat(T)(T data) if (isDataRange!T) {
 auto detectFormat(T)(T loadeable) if (isLoadeable!T) {
     return detectFormat(dataLoad(loadeable));
 }
+/// Ditto
+Format detectFormat(size_t bpc)(const Image!bpc image) {
+    auto typeInfo = typeid(image.meta);
+    foreach (format; formats) {
+        if (format.metaType && format.metaType == typeInfo) {
+            return format;
+        }
+    }
+    throw new NotSupported("Unknown Format");
+}
 
 /**
  * Documentation
  */
 auto loadMeta(T)(T data) if (isDataRange!T) {
     auto format = detectFormat(data);
-    return format.loadMeta(data);
+    return format.loadMeta(data.inputRangeObject);
 }
 /// Ditto
 auto loadMeta(T)(T loadeable) if (isLoadeable!T) {
@@ -72,8 +83,27 @@ auto load(size_t bpc, T)(T loadeable) if (isLoadeable!T) {
 /**
  * Documentation
  */
-auto save(size_t bpc, T)(const Image!bpc image, T data) if (isOutRange!T) {
+void save(size_t bpc, T)(const Image!bpc image, T data) if (isOutRange!T) {
+    auto format = detectFormat(image);
+    format.save(data.outputRangeObject!ubyte, image.range.imageRangeObject, image.meta);
+}
+/// Ditto
+void save(size_t bpc)(const Image!bpc image, string path) {
+    // Specialcase for paths, to match by extension
+    Nullable!Format format;
+    foreach (f; formats) {
+        if (f.extensions.canFind(path.extension)) {
+            format = f;
+            break;
+        }
+    }
 
+    if (format.isNull) {
+        format = detectFormat(image);
+    }
+
+    auto data = dataSave(path).outputRangeObject!ubyte;
+    format.save(data, image.range.imageRangeObject, image.meta);
 }
 /// Ditto
 void save(size_t bpc, T)(const Image!bpc image, T saveable) if (isSaveable!T) {
@@ -95,8 +125,9 @@ struct Format {
     bool function(DataRange) check;
     MetaData function(DataRange) loadMeta;
     ImageRange!PixelData function(DataRange, MetaData) loadImage;
-    void function(OutputRange!ubyte, RandomAccessImageRange!(real[]), MetaData) save;
+    void function(OutputRange!ubyte, RandomAccessImageRange!(real[]), const MetaData) save;
     string[] extensions;
+    TypeInfo metaType;
 }
 
 private Format[] formats;

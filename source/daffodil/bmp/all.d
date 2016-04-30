@@ -30,8 +30,9 @@ static this() {
         &check!DataRange,
         &loadMeta!DataRange,
         (d, m) => loadImage!DataRange(d, cast(BmpMetaData)m).imageRangeObject,
-        null,
+        (d, i, m) => saveImage!(OutputRange!ubyte, RandomAccessImageRange!(real[]))(d, i, cast(BmpMetaData)m),
         [".bmp", ".dib"],
+        typeid(BmpMetaData),
     ));
 }
 

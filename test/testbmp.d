@@ -35,7 +35,7 @@ unittest {
 @("save same BMP image")
 unittest {
     import std.stdio;
-    import daffodil.util.range;
+    import daffodil.util.range : array, iter;
     import std.outbuffer;
     import std.algorithm;
 
@@ -43,7 +43,7 @@ unittest {
     auto image = load!8(imageData.iter);
 
     auto buffer = new OutBuffer();
-    bmp.save(image, buffer);
+    image.save(buffer);
 
     assert(buffer.toBytes() == imageData);
 }
