@@ -63,6 +63,14 @@ struct PixelData {
     real[] data;
 }
 
+/// Calculate the padding needed when padding a bpp with a width to a multiple of bytes
+auto paddingFor(size_t width, size_t bpp, size_t padding) {
+    auto bitsPerRow = width * bpp;
+    auto paddingBits = padding * 8;
+    auto bitRowSize = ((bitsPerRow + paddingBits - 1) / paddingBits) * paddingBits;
+    return (bitRowSize - bitsPerRow) / 8;
+}
+
 /**
  * Documentation
  */
@@ -104,10 +112,7 @@ auto maskedRasterLoad(R, T)(
         }
 
         private void popPadding() {
-            auto bitRowPos = (x + 1) * bpp;
-            auto paddingBits = padding * 8;
-            auto bitRowSize = ((bitRowPos + paddingBits - 1) / paddingBits) * paddingBits;
-            auto pad = (bitRowSize - bitRowPos) / 8;
+            auto pad = paddingFor(_width, bpp, padding);
             range.popFrontExactly(pad);
         }
 
@@ -141,6 +146,57 @@ void maskedLoad(R, T)(real[] target, R range, T[] masks, size_t bpp) {
         // TODO: Optimise
         foreach (index, value; data) {
             target[maskIndex] += (value >> (bitStart - index * 8)) / max;
+        }
+    }
+}
+
+void maskedRasterSave(R, O, T)(
+        R image,
+        O output,
+        T[] mask,
+        size_t bpp,
+        ptrdiff_t width,
+        ptrdiff_t height,
+        size_t padding = 1) if (isOutputRange!(O, ubyte) &&
+                                isRandomAccessImageRange!R &&
+                                is(ElementType!R == real[])) {
+    assert(bpp % 8 == 0);
+
+    ubyte[] saveBuffer = new ubyte[bpp / 8];
+
+    foreach (y; 0..abs(height)) {
+        auto yReal = height < 0 ? -height - y - 1 : y;
+
+        foreach (x; 0..width) {
+            auto data = image[x, yReal];
+            maskedSave(data, saveBuffer, mask, bpp);
+            put(output, saveBuffer);
+        }
+
+        // Apply padding
+        auto pad = paddingFor(width, bpp, padding);
+        foreach (_; 0..pad) {
+            output.put(cast(ubyte)0);
+        }
+    }
+}
+
+import unit_threaded;
+void maskedSave(T)(real[] data, ubyte[] target, T[] masks, size_t bpp) {
+    foreach (index; 0..target.length) {
+        target[index] = 0;
+    }
+
+    foreach (maskIndex, mask; masks) {
+        auto bitStart = T.sizeof * 8 - bsr(mask) - 1;
+        auto bitEnd = T.sizeof * 8 - bsf(mask);
+
+        auto max = pow(2f, bitEnd - bitStart) - 1f;
+
+        // TODO: Optimise
+        foreach (index; 0..target.length) {
+            auto value = cast(size_t)(data[maskIndex] * max);
+            target[index] += cast(ubyte)(value << (bitStart - index * 8));
         }
     }
 }
