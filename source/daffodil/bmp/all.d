@@ -191,6 +191,10 @@ auto loadImage(T)(T loadeable, BmpMetaData meta) if (isLoadeable!T) {
 void save(size_t bpc, R)(Image!bpc image, R output) if (isOutputRange!(R, ubyte)) {
     saveImage(output, image.range, cast(BmpMetaData)image.meta);
 }
+/// Ditto
+void save(size_t bpc, T)(Image!bpc image, T saveable) if (isSaveable!T) {
+    save(image, dataSave(saveable));
+}
 
 /**
  * Documentation
@@ -202,7 +206,7 @@ void saveImage(R, I)(R output, I image, BmpMetaData meta) if (isOutputRange!(R, 
         assert(false);
     }
 
-    output.put(MAGIC_NUMBER);
+    put(output, MAGIC_NUMBER[]);
     // TODO: Validation
     writeHeader(meta.bmpHeader, output);
     writeHeader(meta.dibVersion, output);
@@ -212,6 +216,14 @@ void saveImage(R, I)(R output, I image, BmpMetaData meta) if (isOutputRange!(R, 
             writeHeader(cast(DibHeader!ver)meta.dibHeader, output);
         }
     }
+
+    auto dib = meta.dibHeader;
+    uint[] masks = [dib.redMask, dib.greenMask, dib.blueMask];
+    if (dib.alphaMask != 0) {
+        masks ~= dib.alphaMask;
+    }
+
+    maskedRasterSave(image, output, masks, dib.bitCount, dib.width, -dib.height, 4);
 }
 /// Ditto
 void saveImage(T, I)(T saveable, I image, BmpMetaData meta) if (isSaveable!T &&

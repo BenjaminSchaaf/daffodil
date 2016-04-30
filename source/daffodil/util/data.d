@@ -181,7 +181,6 @@ void maskedRasterSave(R, O, T)(
     }
 }
 
-import unit_threaded;
 void maskedSave(T)(real[] data, ubyte[] target, T[] masks, size_t bpp) {
     foreach (index; 0..target.length) {
         target[index] = 0;

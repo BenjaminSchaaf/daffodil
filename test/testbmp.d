@@ -45,6 +45,5 @@ unittest {
     auto buffer = new OutBuffer();
     bmp.save(image, buffer);
 
-    // TODO: Compare entire file once image data is written
-    assert(buffer.toBytes() == imageData[0..54]);
+    assert(buffer.toBytes() == imageData);
 }

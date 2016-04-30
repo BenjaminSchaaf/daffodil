@@ -107,7 +107,7 @@ void writeHeader(Endianess e = Endianess.little, T, R)(T value, R output) if (co
             fieldData = nativeToBigEndian(value);
         }
 
-        output.put(fieldData);
+        put(output, fieldData[]);
     }
 }
 
