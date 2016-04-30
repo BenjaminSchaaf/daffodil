@@ -43,7 +43,7 @@ OutRange dataSave(File file) {
     struct F {
         File f;
         this(File f) { this.f = f; }
-        void put(ubyte data) { f.write(data); }
+        void put(ubyte data) { f.rawWrite([data]); }
     }
     return F(file).outputRangeObject!ubyte;
 }
