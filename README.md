@@ -43,7 +43,7 @@ Add daffodil as a dependency to your
 
 ```json
 "dependencies": {
-    "daffodil": "~>0.1.0"
+    "daffodil": "~>0.1.1"
 }
 ```
 
