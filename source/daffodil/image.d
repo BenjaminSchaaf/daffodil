@@ -68,6 +68,8 @@ class Image(size_t bpc_) {
         this._channelCount = other._channelCount;
         this.raster        = other.raster.dup;
         this.colorSpace    = other.colorSpace;
+        // TODO: Take copy here?
+        this.meta          = cast(MetaData)other.meta;
     }
 
     /**
