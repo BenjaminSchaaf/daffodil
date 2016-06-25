@@ -37,13 +37,13 @@ void testGoodBMPImagesLoading(string fileName) {
   "pal8os2.bmp", "pal8topdown.bmp", "pal8v5.bmp", "pal8w125.bmp",
   "rgb24pal.bmp", "pal1.bmp", "pal4.bmp", "pal4rle.bmp", "pal8.bmp",
   "pal8nonsquare.bmp", "pal8rle.bmp", "pal8v4.bmp", "pal8w124.bmp",
-  "pal8w126.bmp", "rgb16-565pal.bmp", "rgb24.bmp", "rgb32.bmp", "rgb32bf.bmp",
-  "rgb16-565.bmp")
+  "pal8w126.bmp", "rgb16-565pal.bmp", "rgb32bf.bmp", "rgb16-565.bmp",
+  "rgb16.bmp")
 void testGoodBMPImagesFailSaving(string fileName) {
     testGoodBMPImagesSaving(fileName);
 }
 
-@("rgb16.bmp")
+@("rgb24.bmp", "rgb32.bmp")
 void testGoodBMPImagesSaving(string fileName) {
     auto origPath = "test/bmp_suite/g/" ~ fileName;
     auto copyPath = "build/" ~ origPath;
@@ -53,7 +53,9 @@ void testGoodBMPImagesSaving(string fileName) {
 
     auto origData = cast(ubyte[])read(origPath);
     auto copyData = cast(ubyte[])read(copyPath);
-    assert(cmp(origData, copyData) != 1);
+    writelnUt(origData);
+    writelnUt(copyData);
+    assert(origData[0..copyData.length] == copyData);
 }
 
 @("badbitcount.bmp", "baddens1.bmp", "badfilesize.bmp", "badpalettesize.bmp",
