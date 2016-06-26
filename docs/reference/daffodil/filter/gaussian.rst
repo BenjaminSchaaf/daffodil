@@ -1,7 +1,5 @@
-.. d:module:: daffodil.filter.gaussian
-
-daffodil.filter.gaussian
-########################
+gaussian
+########
 
 A gaussian filter (aka gaussian blur) is a convolution
 (:d:mod:`daffodil.filter.convolve`) using a matrix created from a gaussian
@@ -31,3 +29,5 @@ distribution.
     Return a copy of ``image`` with a gaussian blur applied across axies
     ``axis`` with a given standard deviation and the number of standard
     deviations to stop at.
+
+.. automodule:: daffodil.filter.gaussian

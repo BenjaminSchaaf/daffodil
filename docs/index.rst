@@ -5,7 +5,8 @@ Daffodil is a D image processing Library, inspired by Pillow_ (The Python
 Imaging Library)
 
 .. toctree::
-    :maxdepth: 2
+    :titlesonly:
+    :includehidden:
 
     about
     reference/index

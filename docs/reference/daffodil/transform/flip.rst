@@ -1,7 +1,5 @@
-.. d:module:: daffodil.transform.flip
-
-daffodil.transform.flip
-#######################
+flip
+####
 
 .. d:function::
     void flip(string axis, size_t bpc)(Image!bpc image)
@@ -29,3 +27,5 @@ daffodil.transform.flip
 
         // Flip along each axis individually, making a copy each time.
         auto flipped = image.flipped!"x".flipped!"y";
+
+.. automodule:: daffodil.transform.flip
