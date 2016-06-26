@@ -16,11 +16,6 @@
 import sys
 import os
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.append(os.path.abspath('.'))
-
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -34,6 +29,8 @@ extensions = [
     'ddoc.d',
     'ddoc.autodoc',
 ]
+
+autodoc_lookup_path = os.path.join(os.path.split(__file__)[0], "..", "source")
 
 highlight_language = 'd'
 todo_include_todos = True
