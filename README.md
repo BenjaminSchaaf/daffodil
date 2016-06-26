@@ -35,7 +35,6 @@ void main() {
 }
 ```
 
-
 ## Installing
 
 Add daffodil as a dependency to your
@@ -67,8 +66,10 @@ dub test
 ### Documentation
 
 Documentation is written using the [sphinx
-framework](http://www.sphinx-doc.org/en/stable/) and can be compiled to html
-using:
+framework](http://www.sphinx-doc.org/en/stable/) and a custom D domain/autodoc
+for sphinx ([sphinxddoc](https://github.com/BenjaminSchaaf/sphinxddoc)).
+
+To build the documentation, simply run:
 
 ```bash
 dub -c docs
