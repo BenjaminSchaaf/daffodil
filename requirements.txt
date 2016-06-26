@@ -1,0 +1,1 @@
+-e git+https://github.com/BenjaminSchaaf/sphinxddoc#egg=ddoc
