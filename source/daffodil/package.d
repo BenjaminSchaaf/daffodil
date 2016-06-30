@@ -122,13 +122,13 @@ alias isOutRange(T) = isOutputRange!(T, ubyte);
  * Documentation
  */
 struct Format {
-    string name;
-    bool function(DataRange) check;
-    MetaData function(DataRange) loadMeta;
-    ImageRange!PixelData function(DataRange, MetaData) loadImage;
-    void function(OutputRange!ubyte, RandomAccessImageRange!(real[]), const MetaData) save;
-    string[] extensions;
-    TypeInfo metaType;
+    /** */ string name;
+    /** */ bool function(DataRange) check;
+    /** */ MetaData function(DataRange) loadMeta;
+    /** */ ImageRange!PixelData function(DataRange, MetaData) loadImage;
+    /** */ void function(OutputRange!ubyte, RandomAccessImageRange!(real[]), const MetaData) save;
+    /** */ string[] extensions;
+    /** */ TypeInfo metaType;
 }
 
 private Format[] formats;
