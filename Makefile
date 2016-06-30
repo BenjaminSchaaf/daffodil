@@ -210,3 +210,10 @@ dummy:
 	$(SPHINXBUILD) -b dummy $(ALLSPHINXOPTS) $(BUILDDIR)/dummy
 	@echo
 	@echo "Build finished. Dummy builder generates no files."
+.PHONY: deploy
+deploy: html
+	$(eval tmp = mktemp -d)
+	cp $(BUILDDIR)/html $tmp -r
+	git checkout gh-pages
+	cp $tmp/* . -r
+	rm -rf $tmp
