@@ -72,5 +72,5 @@ for sphinx ([sphinxddoc](https://github.com/BenjaminSchaaf/sphinxddoc)).
 To build the documentation, simply run:
 
 ```bash
-dub -c docs
+make html
 ```
