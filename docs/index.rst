@@ -9,7 +9,7 @@ Imaging Library)
     :includehidden:
 
     about
-    reference/index
+    daffodil/index
 
 ..
     Once indexing works:
