@@ -1,3 +1,6 @@
+/**
+ * This module provides the public interface for Daffodil.
+ */
 module daffodil;
 
 import std.path;
@@ -24,7 +27,7 @@ public {
 }
 
 /**
- * Documentation
+ * Detects the :d:struct:`Format` a given input is in.
  */
 Format detectFormat(T)(T data) if (isDataRange!T) {
     auto range = data.inputRangeObject;
@@ -56,7 +59,7 @@ Format detectFormat(size_t bpc)(const Image!bpc image) {
 }
 
 /**
- * Documentation
+ * Loads the metadata from a given input.
  */
 auto loadMeta(T)(T data) if (isDataRange!T) {
     auto format = detectFormat(data);
@@ -68,7 +71,7 @@ auto loadMeta(T)(T loadeable) if (isLoadeable!T) {
 }
 
 /**
- * Documentation
+ * Loads a :d:class:`Image` from a given input.
  */
 auto load(size_t bpc, T)(T data) if (isDataRange!T) {
     auto range = data.inputRangeObject;
@@ -82,7 +85,7 @@ auto load(size_t bpc, T)(T loadeable) if (isLoadeable!T) {
 }
 
 /**
- * Documentation
+ * Saves a particular :d:class:`Image` to a given output.
  */
 void save(size_t bpc, T)(const Image!bpc image, T data) if (isOutRange!T) {
     auto format = detectFormat(image);
@@ -119,23 +122,32 @@ alias OutRange = OutputRange!ubyte;
 alias isOutRange(T) = isOutputRange!(T, ubyte);
 
 /**
- * Documentation
+ * A struct for metadata about an Image Format. See :d:func:`registerFormat` for
+ * more information.
  */
 struct Format {
-    /** */ string name;
-    /** */ bool function(DataRange) check;
-    /** */ MetaData function(DataRange) loadMeta;
-    /** */ ImageRange!PixelData function(DataRange, MetaData) loadImage;
-    /** */ void function(OutputRange!ubyte, RandomAccessImageRange!(real[]), const MetaData) save;
-    /** */ string[] extensions;
-    /** */ TypeInfo metaType;
+    ///
+    string name;
+    ///
+    bool function(DataRange) check;
+    ///
+    MetaData function(DataRange) loadMeta;
+    ///
+    ImageRange!PixelData function(DataRange, MetaData) loadImage;
+    ///
+    void function(OutputRange!ubyte, RandomAccessImageRange!(real[]), const MetaData) save;
+    ///
+    string[] extensions;
+    ///
+    TypeInfo metaType;
 }
 
 private Format[] formats;
 private Format[string] formatsByExt;
 
 /**
- * Documentation
+ * Register a new format for auto-detection with :d:func:`detectFormat`,
+ * :d:func:`loadMeta` and :d:func:`load` functions.
  */
 void registerFormat(Format format) {
     formats ~= format;
