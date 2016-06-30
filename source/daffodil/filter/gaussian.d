@@ -1,3 +1,8 @@
+/**
+ * A gaussian filter (aka gaussian blur) is a convolution
+ * (:d:mod:`daffodil.filter.convolve`) using a matrix created from a gaussian
+ * distribution.
+ */
 module daffodil.filter.gaussian;
 
 import std.math;
@@ -6,7 +11,8 @@ import daffodil.image;
 import daffodil.filter;
 
 /**
- * Evaluate the gaussian/normal distribution for a given x, standard deviation and mean.
+ * Evaluate the gaussian/normal distribution for a given ``x``, ``stDev`` and
+ * ``mean``.
  */
 real gaussianDistribution(real x, real stDev = 1, real mean = 0) {
     return 1/(stDev * sqrt(2 * PI))* E.pow(-pow(x - mean, 2)/(2 * pow(stDev, 2)));
@@ -38,11 +44,11 @@ unittest {
 }
 
 /**
- * Create a 1D matrix of a discrete gaussian distribution with a given
- * standard deviation and the number of standard deviations to stop generating at.
- * The result is mirrored with guaranteed odd length.
+ * Create a 1D matrix of a discrete gaussian distribution with a given standard
+ * deviation and the number of standard deviations to stop generating at. The
+ * result is mirrored with guaranteed odd length.
  *
- * This can be used to gaussian blur an image by passing the result to convolved
+ * The result can be used to convolve a image.
  */
 real[] gaussianMatrix(real stDev = 1, real maxDev = 3) {
     auto range = cast(uint)ceil(stDev * maxDev);
@@ -65,8 +71,9 @@ unittest {
 }
 
 /**
- * Convenience method for applying gaussian blur.
- * Combines the gaussianMatrix and convolved functions.
+ * Return a copy of ``image`` with a gaussian blur applied across axies
+ * ``axis`` with a given standard deviation and the number of standard
+ * deviations to stop at.
  */
 auto gaussianBlurred(string axis = "xy", size_t bpc)(const Image!bpc image, real stDev = 1, real maxDev = 3) {
     auto matrix = gaussianMatrix(stDev, maxDev);

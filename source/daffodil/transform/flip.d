@@ -5,7 +5,8 @@ import std.algorithm;
 import daffodil.image;
 
 /**
- * Flips a image along either the x, y or both axis.
+ * Flip ``image`` along ``axis`` in-place. ``axis`` may contain ``x``, ``y`` or
+ * both.
  */
 void flip(string axis, size_t bpc)(Image!bpc image) {
     static if (canFind(axis, 'x')) {
@@ -28,7 +29,11 @@ void flip(string axis, size_t bpc)(Image!bpc image) {
         }
     }
 }
-/// Ditto
+
+/**
+ * Same as :d:func:`flip` but performs the operation on a copy of ``image``.
+ * Allows for stringing operations together.
+ */
 auto flipped(string axis, size_t bpc)(const Image!bpc image) {
     auto output = image.dup;
     output.flip!axis();

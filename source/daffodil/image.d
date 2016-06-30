@@ -1,3 +1,7 @@
+/**
+ * Exposes the :d:class:`Image` class, which provides basic storage, access and
+ * conversion of images.
+ */
 module daffodil.image;
 
 import std.conv;
@@ -16,16 +20,19 @@ import daffodil.util.types;
  */
 class Image(size_t bpc_) {
     /**
-     * Bits per Channel
+     * Number of bits per channel.
      */
     enum bpc = bpc_;
 
     /**
-     * Storage type for each value in a channel
+     * Storage type for each value in a channel.
      */
     alias Value = Integer!bpc;
+
+    /// The maximum value for any channel value.
     enum maxValue = pow(2, bpc) - 1;
 
+    /// The metadata of the image.
     MetaData meta;
 
     private {
@@ -50,7 +57,8 @@ class Image(size_t bpc_) {
     }
 
     /**
-     * Documentation
+     * Create a Image from a given image range, color space and optional
+     * metadata.
      */
     this(R)(R range, ColorSpace!bpc colorSpace,
             MetaData meta = null) if (isImageRange!R &&
@@ -62,7 +70,7 @@ class Image(size_t bpc_) {
         }
     }
 
-    /// Create a image from data copied off another image
+    /// Create a image from data copied off another image.
     this(const Image other) {
         this._size         = other._size;
         this._channelCount = other._channelCount;
@@ -108,12 +116,13 @@ class Image(size_t bpc_) {
     }
 
     /**
-     * Create a new color compatible with the image
+     * Create a new color within the color space of the image.
      */
     auto newColor() const {
         return Pixel!bpc(channelCount, colorSpace);
     }
 
+    /// Return a copy of the image.
     @property Image dup() const {
         return new Image(this);
     }
@@ -122,6 +131,7 @@ class Image(size_t bpc_) {
         return raster.to!string;
     }
 
+    /// Return a image range for the image.
     @property auto range() const {
         struct Range {
             const Image image;
