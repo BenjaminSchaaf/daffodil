@@ -139,7 +139,6 @@
             
   <div class="section" id="daffodil">
 <h1>daffodil<a class="headerlink" href="#daffodil" title="Permalink to this headline">¶</a></h1>
-<p>The <a class="reference internal" href="#d:mod:daffodil" title="daffodil"><code class="xref d d-mod docutils literal"><span class="pre">daffodil</span></code></a> module provides the public interface for Daffodil.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="color.html">color</a></li>
@@ -159,7 +158,8 @@
 <dl class="daffodil">
 <dt>
 <code class="descname">module daffodil</code></dt>
-<dd><p>Public Imports:</p>
+<dd><p>This module provides the public interface for Daffodil.</p>
+<p>Public Imports:</p>
 <blockquote>
 <div><div class="line-block">
 <div class="line"><a class="reference internal" href="meta.html#d:mod:daffodil.meta" title="daffodil.meta"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.meta</span></code></a></div>
@@ -178,7 +178,7 @@
 <code class="descname">auto detectFormat(T loadeable)</code></dt>
 <dt>
 <code class="descname">Format detectFormat(Image!bpc image)</code></dt>
-<dd><p>Documentation</p>
+<dd><p>Detects the <code class="xref d d-struct docutils literal"><span class="pre">Format</span></code> a given input is in.</p>
 </dd></dl>
 
 <dl class="daffodil.loadMeta">
@@ -186,7 +186,7 @@
 <code class="descname">auto loadMeta(T data)</code></dt>
 <dt>
 <code class="descname">auto loadMeta(T loadeable)</code></dt>
-<dd><p>Documentation</p>
+<dd><p>Loads the metadata from a given input.</p>
 </dd></dl>
 
 <dl class="daffodil.load">
@@ -194,7 +194,7 @@
 <code class="descname">auto load(T data)</code></dt>
 <dt>
 <code class="descname">auto load(T loadeable)</code></dt>
-<dd><p>Documentation</p>
+<dd><p>Loads a <code class="xref d d-class docutils literal"><span class="pre">Image</span></code> from a given input.</p>
 </dd></dl>
 
 <dl class="daffodil.save">
@@ -204,13 +204,14 @@
 <code class="descname">void save(Image!bpc image, string path)</code></dt>
 <dt>
 <code class="descname">void save(Image!bpc image, T saveable)</code></dt>
-<dd><p>Documentation</p>
+<dd><p>Saves a particular <code class="xref d d-class docutils literal"><span class="pre">Image</span></code> to a given output.</p>
 </dd></dl>
 
 <dl class="daffodil.Format">
 <dt>
 <code class="descname">struct Format</code></dt>
-<dd><p>Documentation</p>
+<dd><p>A struct for metadata about an Image Format. See <code class="xref d d-func docutils literal"><span class="pre">registerFormat</span></code> for
+more information.</p>
 <dl class="daffodil.Format.name">
 <dt>
 <code class="descname">string name</code></dt>
@@ -251,7 +252,8 @@
 <dl class="daffodil.registerFormat">
 <dt>
 <code class="descname">void registerFormat(Format format)</code></dt>
-<dd><p>Documentation</p>
+<dd><p>Register a new format for auto-detection with <code class="xref d d-func docutils literal"><span class="pre">detectFormat</span></code>,
+<a class="reference internal" href="#d:func:loadMeta" title="daffodil.daffodil.Format.loadMeta"><code class="xref d d-func docutils literal"><span class="pre">loadMeta</span></code></a> and <code class="xref d d-func docutils literal"><span class="pre">load</span></code> functions.</p>
 </dd></dl>
 
 </dd></dl>

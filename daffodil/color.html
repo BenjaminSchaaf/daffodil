@@ -145,7 +145,77 @@
 <dl class="daffodil.color">
 <dt>
 <code class="descname">module daffodil.color</code></dt>
+<dd><p>This module contains the implementation for the internal color storage
+mechanisms.</p>
+<dl class="daffodil.color.Pixel">
+<dt>
+<code class="descname">struct Pixel(size_t bpc)</code></dt>
+<dd><p>The storage struct for a color.</p>
+<dl class="daffodil.color.Pixel.values">
+<dt>
+<code class="descname">Value[] values</code></dt>
+<dd><p>The values of the color</p>
+</dd></dl>
+
+<dl class="daffodil.color.Pixel.colorSpace">
+<dt>
+<code class="descname">ColorSpace!bpc colorSpace</code></dt>
+<dd><p>The color space used for operations with the color</p>
+</dd></dl>
+
+<dl class="daffodil.color.Pixel.this">
+<dt>
+<code class="descname">this</code></dt>
+<dt>
+<code class="descname">this</code></dt>
 <dd></dd></dl>
+
+<dl class="daffodil.color.Pixel.opBinary">
+<dt>
+<code class="descname">Pixel!bpc opBinary(real other)</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.color.Pixel.opBinary">
+<dt>
+<code class="descname">Pixel!bpc opBinary(Pixel!bpc other)</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.color.Pixel.opOpAssign">
+<dt>
+<code class="descname">void opOpAssign(real other)</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.color.Pixel.opOpAssign">
+<dt>
+<code class="descname">void opOpAssign(Pixel!bpc other)</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.color.Pixel.opAssign">
+<dt>
+<code class="descname">void opAssign(Pixel!bpc other)</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.color.Pixel.clear">
+<dt>
+<code class="descname">void clear()</code></dt>
+<dd><p>Clear all the color values to 0</p>
+</dd></dl>
+
+<dl class="daffodil.color.Pixel.dup">
+<dt>
+<code class="descname">auto dup()</code></dt>
+<dd><p>Return a duplicate color in the same color space</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="daffodil.color.RGB">
+<dt>
+<code class="descname">class RGB(size_t bpc)</code></dt>
+<dd><p>A color space implementation for RGB colors</p>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 

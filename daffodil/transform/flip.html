@@ -146,42 +146,21 @@
             
   <div class="section" id="flip">
 <h1>flip<a class="headerlink" href="#flip" title="Permalink to this headline">¶</a></h1>
-<dl class="flip">
-<dt>
-<code class="descname">void flip(string axis, size_t bpc)(Image!bpc image)</code></dt>
-<dd><p>Flip <code class="docutils literal"><span class="pre">image</span></code> along <code class="docutils literal"><span class="pre">axis</span></code> in-place. <code class="docutils literal"><span class="pre">axis</span></code> may contain <code class="docutils literal"><span class="pre">x</span></code>, <code class="docutils literal"><span class="pre">y</span></code> or
-both.</p>
-<p>Example:</p>
-<div class="highlight-d"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">image</span> <span class="p">=</span> <span class="n">load</span><span class="p">!</span><span class="mi">8</span><span class="p">(</span><span class="s">&quot;daffodil.bmp&quot;</span><span class="p">);</span>
-<span class="n">image</span><span class="p">.</span><span class="n">flip</span><span class="p">!</span><span class="s">&quot;x&quot;</span><span class="p">();</span> <span class="c1">// Flip the image horizontally</span>
-<span class="n">image</span><span class="p">.</span><span class="n">flip</span><span class="p">!</span><span class="s">&quot;y&quot;</span><span class="p">();</span> <span class="c1">// Flip the image vertically</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="flip">
-<dt>
-<code class="descname">Image!bpc flipped(string axis, size_t bpc)(const Image!bpc image)</code></dt>
-<dd><p>Same as <a class="reference internal" href="#d:func:flip" title="flip"><code class="xref d d-func docutils literal"><span class="pre">flip</span></code></a> but performs the operation on a copy of <code class="docutils literal"><span class="pre">image</span></code>.
-Allows for stringing operations together.</p>
-<p>Example:</p>
-<div class="highlight-d"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">image</span> <span class="p">=</span> <span class="n">load</span><span class="p">!</span><span class="mi">8</span><span class="p">(</span><span class="s">&quot;daffodil.bmp&quot;</span><span class="p">);</span>
-
-<span class="c1">// Flip along each axis individually, making a copy each time.</span>
-<span class="k">auto</span> <span class="n">flipped</span> <span class="p">=</span> <span class="n">image</span><span class="p">.</span><span class="n">flipped</span><span class="p">!</span><span class="s">&quot;x&quot;</span><span class="p">.</span><span class="n">flipped</span><span class="p">!</span><span class="s">&quot;y&quot;</span><span class="p">;</span>
-</pre></div>
-</div>
-</dd></dl>
-
 <dl class="daffodil.transform.flip">
 <dt>
 <code class="descname">module daffodil.transform.flip</code></dt>
 <dd><dl class="daffodil.transform.flip.flip">
 <dt>
 <code class="descname">void flip(Image!bpc image)</code></dt>
+<dd><p>Flip <code class="docutils literal"><span class="pre">image</span></code> along <code class="docutils literal"><span class="pre">axis</span></code> in-place. <code class="docutils literal"><span class="pre">axis</span></code> may contain <code class="docutils literal"><span class="pre">x</span></code>, <code class="docutils literal"><span class="pre">y</span></code> or
+both.</p>
+</dd></dl>
+
+<dl class="daffodil.transform.flip.flipped">
 <dt>
 <code class="descname">auto flipped(Image!bpc image)</code></dt>
-<dd><p>Flips a image along either the x, y or both axis.</p>
+<dd><p>Same as <a class="reference internal" href="#d:func:flip" title="flip"><code class="xref d d-func docutils literal"><span class="pre">flip</span></code></a> but performs the operation on a copy of <code class="docutils literal"><span class="pre">image</span></code>.
+Allows for stringing operations together.</p>
 </dd></dl>
 
 </dd></dl>

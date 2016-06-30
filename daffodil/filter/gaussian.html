@@ -148,56 +148,34 @@
             
   <div class="section" id="gaussian">
 <h1>gaussian<a class="headerlink" href="#gaussian" title="Permalink to this headline">¶</a></h1>
-<p>A gaussian filter (aka gaussian blur) is a convolution
+<dl class="daffodil.filter.gaussian">
+<dt>
+<code class="descname">module daffodil.filter.gaussian</code></dt>
+<dd><p>A gaussian filter (aka gaussian blur) is a convolution
 (<a class="reference internal" href="convolve.html#d:mod:daffodil.filter.convolve" title="daffodil.filter.convolve"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.filter.convolve</span></code></a>) using a matrix created from a gaussian
 distribution.</p>
-<dl class="gaussianDistribution">
+<dl class="daffodil.filter.gaussian.gaussianDistribution">
 <dt>
-<code class="descname">real gaussianDistribution(real x, real stDev = 1, real mean = 0)</code></dt>
+<code class="descname">real gaussianDistribution(real x, real stDev, real mean)</code></dt>
 <dd><p>Evaluate the gaussian/normal distribution for a given <code class="docutils literal"><span class="pre">x</span></code>, <code class="docutils literal"><span class="pre">stDev</span></code> and
 <code class="docutils literal"><span class="pre">mean</span></code>.</p>
 </dd></dl>
 
-<dl class="gaussianMatrix">
+<dl class="daffodil.filter.gaussian.gaussianMatrix">
 <dt>
-<code class="descname">real[] gaussianMatrix(real stDev = 1, real maxDev = 3)</code></dt>
+<code class="descname">real[] gaussianMatrix(real stDev, real maxDev)</code></dt>
 <dd><p>Create a 1D matrix of a discrete gaussian distribution with a given standard
 deviation and the number of standard deviations to stop generating at. The
 result is mirrored with guaranteed odd length.</p>
 <p>The result can be used to convolve a image.</p>
 </dd></dl>
 
-<dl class="gaussianBlurred">
-<dt>
-<code class="descname">auto gaussianBlurred(string axis = &quot;xy&quot;, size_t bpc)(const Image!bpc image, real stDev = 1, real maxDev = 3)</code></dt>
-<dd><p>Return a copy of <code class="docutils literal"><span class="pre">image</span></code> with a gaussian blur applied across axies
-<code class="docutils literal"><span class="pre">axis</span></code> with a given standard deviation and the number of standard
-deviations to stop at.</p>
-</dd></dl>
-
-<dl class="daffodil.filter.gaussian">
-<dt>
-<code class="descname">module daffodil.filter.gaussian</code></dt>
-<dd><dl class="daffodil.filter.gaussian.gaussianDistribution">
-<dt>
-<code class="descname">real gaussianDistribution(real x, real stDev, real mean)</code></dt>
-<dd><p>Evaluate the gaussian/normal distribution for a given x, standard deviation and mean.</p>
-</dd></dl>
-
-<dl class="daffodil.filter.gaussian.gaussianMatrix">
-<dt>
-<code class="descname">real[] gaussianMatrix(real stDev, real maxDev)</code></dt>
-<dd><p>Create a 1D matrix of a discrete gaussian distribution with a given
-standard deviation and the number of standard deviations to stop generating at.
-The result is mirrored with guaranteed odd length.</p>
-<p>This can be used to gaussian blur an image by passing the result to convolved</p>
-</dd></dl>
-
 <dl class="daffodil.filter.gaussian.gaussianBlurred">
 <dt>
 <code class="descname">auto gaussianBlurred(Image!bpc image, real stDev, real maxDev)</code></dt>
-<dd><p>Convenience method for applying gaussian blur.
-Combines the gaussianMatrix and convolved functions.</p>
+<dd><p>Return a copy of <code class="docutils literal"><span class="pre">image</span></code> with a gaussian blur applied across axies
+<code class="docutils literal"><span class="pre">axis</span></code> with a given standard deviation and the number of standard
+deviations to stop at.</p>
 </dd></dl>
 
 </dd></dl>

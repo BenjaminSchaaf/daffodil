@@ -142,12 +142,12 @@
             
   <div class="section" id="image">
 <h1>image<a class="headerlink" href="#image" title="Permalink to this headline">¶</a></h1>
-<p>The <a class="reference internal" href="#d:mod:daffodil.image" title="daffodil.image"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.image</span></code></a> module exposes the <code class="xref d d-class docutils literal"><span class="pre">Image</span></code> class, which
-provides basic storage, access and conversion of images.</p>
 <dl class="daffodil.image">
 <dt>
 <code class="descname">module daffodil.image</code></dt>
-<dd><dl class="daffodil.image.Image">
+<dd><p>Exposes the <code class="xref d d-class docutils literal"><span class="pre">Image</span></code> class, which provides basic storage, access and
+conversion of images.</p>
+<dl class="daffodil.image.Image">
 <dt>
 <code class="descname">class Image(size_t bpc_)</code></dt>
 <dd><p>Generic Image class for a given pixel format.
@@ -156,7 +156,19 @@ generic transformations and manipulations using other interfaces.</p>
 <dl class="daffodil.image.Image.bpc">
 <dt>
 <code class="descname">auto bpc</code></dt>
-<dd><p>Bits per Channel</p>
+<dd><p>Number of bits per channel.</p>
+</dd></dl>
+
+<dl class="daffodil.image.Image.maxValue">
+<dt>
+<code class="descname">auto maxValue</code></dt>
+<dd><p>The maximum value for any channel value.</p>
+</dd></dl>
+
+<dl class="daffodil.image.Image.meta">
+<dt>
+<code class="descname">MetaData meta</code></dt>
+<dd><p>The metadata of the image.</p>
 </dd></dl>
 
 <dl class="daffodil.image.Image.this">
@@ -169,13 +181,14 @@ Pixels default to <cite>init</cite></p>
 <dl class="daffodil.image.Image.this">
 <dt>
 <code class="descname">this</code></dt>
-<dd><p>Documentation</p>
+<dd><p>Create a Image from a given image range, color space and optional
+metadata.</p>
 </dd></dl>
 
 <dl class="daffodil.image.Image.this">
 <dt>
 <code class="descname">this</code></dt>
-<dd><p>Create a image from data copied off another image</p>
+<dd><p>Create a image from data copied off another image.</p>
 </dd></dl>
 
 <dl class="daffodil.image.Image.width">
@@ -213,7 +226,19 @@ Pixels default to <cite>init</cite></p>
 <dl class="daffodil.image.Image.newColor">
 <dt>
 <code class="descname">auto newColor()</code></dt>
-<dd><p>Create a new color compatible with the image</p>
+<dd><p>Create a new color within the color space of the image.</p>
+</dd></dl>
+
+<dl class="daffodil.image.Image.dup">
+<dt>
+<code class="descname">Image dup()</code></dt>
+<dd><p>Return a copy of the image.</p>
+</dd></dl>
+
+<dl class="daffodil.image.Image.range">
+<dt>
+<code class="descname">auto range()</code></dt>
+<dd><p>Return a image range for the image.</p>
 </dd></dl>
 
 </dd></dl>
