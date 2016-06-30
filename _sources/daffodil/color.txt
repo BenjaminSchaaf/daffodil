@@ -1,0 +1,4 @@
+color
+#####
+
+.. automodule:: daffodil.color
