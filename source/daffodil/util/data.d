@@ -26,7 +26,8 @@ DataRange dataLoad(File file) {
 }
 /// Ditto
 DataRange dataLoad(string path) {
-    return dataLoad(File(path, "r"));
+    import std.path : expandTilde;
+    return dataLoad(File(path.expandTilde, "r"));
 }
 
 alias Loadeable = AliasSeq!(File, string);
@@ -49,7 +50,8 @@ OutRange dataSave(File file) {
 }
 /// Ditto
 OutRange dataSave(string path) {
-    return dataSave(File(path, "w"));
+    import std.path : expandTilde;
+    return dataSave(File(path.expandTilde, "w"));
 }
 
 alias Saveable = AliasSeq!(File, string);
