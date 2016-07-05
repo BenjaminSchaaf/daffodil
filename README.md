@@ -26,7 +26,7 @@ import daffodil.filter;
 import daffodil.transform;
 
 void main() {
-    auto image = load!32("daffodil.bmp");
+    auto image = load!uint("daffodil.bmp");
 
     image.gaussianBlurred(1.4).save("blurry_daffodil.bmp");
 
