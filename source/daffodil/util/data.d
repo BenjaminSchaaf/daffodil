@@ -11,7 +11,6 @@ import std.algorithm;
 import core.bitop;
 
 import daffodil;
-import daffodil.util.types;
 import daffodil.util.range;
 import daffodil.util.errors;
 

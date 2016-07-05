@@ -11,8 +11,6 @@ import std.format;
 import std.traits;
 import std.algorithm;
 
-import daffodil.util.types;
-
 /**
  * A group of functions describing the operations for a :d:struct:`Pixel`.
  */

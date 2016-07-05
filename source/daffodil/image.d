@@ -11,7 +11,6 @@ import std.typecons;
 import daffodil;
 import daffodil.util.data;
 import daffodil.util.range;
-import daffodil.util.types;
 
 /**
  * Generic Image class for a given pixel format.
