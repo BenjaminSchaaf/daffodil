@@ -75,7 +75,7 @@ unittest {
  * ``axis`` with a given standard deviation and the number of standard
  * deviations to stop at.
  */
-auto gaussianBlurred(string axis = "xy", size_t bpc)(const Image!bpc image, real stDev = 1, real maxDev = 3) {
+auto gaussianBlurred(string axis = "xy", V)(const Image!V image, real stDev = 1, real maxDev = 3) {
     auto matrix = gaussianMatrix(stDev, maxDev);
 
     return image.convolved!axis(matrix);
@@ -85,7 +85,7 @@ auto gaussianBlurred(string axis = "xy", size_t bpc)(const Image!bpc image, real
 unittest {
     import daffodil;
 
-    auto image = new Image!8(2, 2, 3, new RGB!8);
+    auto image = new Image!ubyte(2, 2, 3, RGB!ubyte);
     image[0, 0] = [1f, 1f, 1f];
     image[0, 1] = [1f, 0f, 0f];
     image[1, 0] = [0f, 1f, 0f];

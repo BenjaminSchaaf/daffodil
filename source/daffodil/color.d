@@ -8,74 +8,73 @@ import std.conv;
 import std.math;
 import std.array;
 import std.format;
+import std.traits;
 import std.algorithm;
 
 import daffodil.util.types;
 
 /**
- * The interface describing the operations for a :d:struct:`Pixel`.
+ * A group of functions describing the operations for a :d:struct:`Pixel`.
  */
-interface ColorSpace(size_t bpc) {
-    alias Value = Integer!bpc;
-
-    void channelopScalarMul(const Value[], const real, Value[]) const;
-    void channelopColorAdd(const Value[], const Value[], Value[]) const;
-    string channelToString(const Value[]) const;
+struct ColorSpace(V) if (isColorValue!V) {
+    void function(const V[], const real, V[]) opScalarMul;
+    void function(const V[], const V[], V[]) opColorAdd;
+    string function(const V[]) toString;
 }
 
 /**
  * The storage struct for a color.
  */
-struct Pixel(size_t bpc) {
+struct Pixel(V) if (isColorValue!V) {
     /// The type used to store individual values for a color
-    alias Value = Integer!bpc;
+    alias Value = V;
 
     /// The values of the color
     Value[] values;
 
     /// The color space used for operations with the color
-    const ColorSpace!bpc colorSpace;
+    const ColorSpace!V* colorSpace;
 
     alias values this;
 
     ///
-    this(Value[] values, const ColorSpace!bpc colorSpace) {
+    this(Value[] values, const ColorSpace!V* colorSpace) {
         this.values = values;
         this.colorSpace = colorSpace;
     }
 
     /// Ditto
-    this(size_t size, const ColorSpace!bpc colorSpace) {
+    this(size_t size, const ColorSpace!V* colorSpace) {
         this(new Value[size], colorSpace);
     }
 
     ///
-    Pixel!bpc opBinary(string op : "*")(const real other) const {
-        auto ret = Pixel!bpc(this.length, colorSpace);
-        colorSpace.channelopScalarMul(values, other, ret.values);
+    Pixel!V opBinary(string op : "*")(const real other) const {
+        auto ret = Pixel!V(this.length, colorSpace);
+        colorSpace.opScalarMul(values, other, ret.values);
         return ret;
     }
 
     ///
-    Pixel!bpc opBinary(string op : "+")(const Pixel!bpc other) const {
+    Pixel!V opBinary(string op : "+")(const Pixel!V other) const {
         // TODO: Check other.colorSpace
-        auto ret = Pixel!bpc(this.length, colorSpace);
-        colorSpace.channelopColorAdd(values, other, ret.values);
+        auto ret = Pixel!V(this.length, colorSpace);
+        colorSpace.opColorAdd(values, other, ret.values);
         return ret;
     }
 
     ///
     void opOpAssign(string op : "*")(const real other) {
-        colorSpace.channelopScalarMul(values, other, values);
+        colorSpace.opScalarMul(values, other, values);
     }
 
     ///
-    void opOpAssign(string op : "+")(const Pixel!bpc other) {
-        colorSpace.channelopColorAdd(values, other, values);
+    void opOpAssign(string op : "+")(const Pixel!V other) {
+        colorSpace.opColorAdd(values, other, values);
     }
 
     ///
-    void opAssign(const Pixel!bpc other) {
+    void opAssign(const Pixel!V other) {
         assert(other.length == this.length);
         foreach (index; 0..this.length) {
             this[index] = other[index];
@@ -91,37 +90,101 @@ struct Pixel(size_t bpc) {
 
     /// Return a duplicate color in the same color space
     @property auto dup() {
-        return Pixel!bpc(values.dup, colorSpace);
+        return Pixel!V(values.dup, colorSpace);
     }
 }
 
 /// A color space implementation for RGB colors
-class RGB(size_t bpc) : ColorSpace!bpc {
-    alias Value = Integer!bpc;
+@property auto RGB(V)() if (isColorValue!V) {
+    static cache = ColorSpace!V(
+        (const V[] self, const real other, V[] target) {
+            assert(self.length == target.length);
 
-    override void channelopColorAdd(const Value[] self, const Value[] other, Value[] target) const {
-        assert(self.length == target.length);
-        assert(self.length == other.length);
-        foreach (index; 0..self.length) {
-            target[index] = cast(Value)min(self[index] + other[index], Value.max);
+            foreach (index; 0..self.length) {
+                target[index] = cast(V)(self[index] * other);
+            }
+        },
+        (const V[] self, const V[] other, V[] target) {
+            assert(self.length == target.length);
+            assert(self.length == other.length);
+            foreach (index; 0..self.length) {
+                target[index] = cast(V)min(self[index] + other[index], V.max);
+            }
+        },
+        (const V[] self) {
+            string output = "(";
+            foreach (index; 0..self.length) {
+                if (index == 0) output ~= ", ";
+                output ~= realFromColorValue(self[index]).to!string;
+            }
+            return output ~ ")";
+        },
+    );
+
+    return &cache;
+}
+
+template isColorValue(V) {
+    enum isColorValue = isFloatingPoint!V ||
+                        isIntegral!V && isUnsigned!V ||
+                        isCustomColorValue!V;
+}
+
+@("isColorValue")
+unittest {
+    assert(isColorValue!ubyte);
+    assert(isColorValue!uint);
+    assert(isColorValue!ulong);
+    assert(!isColorValue!int);
+    assert(isColorValue!float);
+}
+
+template isCustomColorValue(V) {
+    enum isCustomColorValue = is(typeof(
+        (inout int = 0) {
+            V v = V.init;
+            v = V.fromReal(cast(real)1.0);
+            real r = v.toReal();
+        }
+    ));
+}
+
+version(unittest) {
+    private struct IntColorValue {
+        int value = 0;
+
+        static auto fromReal(real v) {
+            return IntColorValue(cast(int)(v / int.max));
+        }
+
+        real toReal() {
+            return cast(real)value / int.max;
         }
     }
+}
 
-    override void channelopScalarMul(const Value[] self, const real other, Value[] target) const {
-        assert(self.length == target.length);
+@("isCustomColorValue")
+unittest {
+    assert(isCustomColorValue!IntColorValue);
+    assert(isColorValue!IntColorValue);
+}
 
-        foreach (index; 0..self.length) {
-            target[index] = cast(Value)(self[index] * other);
-        }
+V colorValueFromReal(V)(real value) if (isColorValue!V) {
+    static if (isFloatingPoint!V) {
+        return value;
+    } else static if (isIntegral!V) {
+        return cast(V)(V.max * value.clamp(0, 1));
+    } else {
+        return V.fromReal(value);
     }
+}
 
-    override string channelToString(const Value[] self) const {
-        real maxValue = pow(2, bpc);
-        string output = "(";
-        foreach (index; 0..self.length) {
-            if (index == 0) output ~= ", ";
-            output ~= (self[index] / maxValue).to!string;
-        }
-        return output ~ ")";
+real realFromColorValue(V)(V value) if (isColorValue!V) {
+    static if (isFloatingPoint!V) {
+        return value;
+    } else static if (isIntegral!V) {
+        return cast(real)value / V.max;
+    } else {
+        return value.toReal();
     }
 }

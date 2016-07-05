@@ -28,7 +28,7 @@ void testGoodBMPImagesLoading(string fileName) {
     auto meta = loadMeta(file);
     assert(meta !is null);
 
-    auto image = load!32(file);
+    auto image = load!ulong(file);
     assert(image !is null);
 }
 
@@ -48,13 +48,11 @@ void testGoodBMPImagesSaving(string fileName) {
     auto origPath = "test/bmp_suite/g/" ~ fileName;
     auto copyPath = "build/" ~ origPath;
 
-    auto image = load!32(origPath);
+    auto image = load!ulong(origPath);
     image.save(copyPath);
 
     auto origData = cast(ubyte[])read(origPath);
     auto copyData = cast(ubyte[])read(copyPath);
-    writelnUt(origData);
-    writelnUt(copyData);
     assert(origData[0..copyData.length] == copyData);
 }
 
@@ -65,7 +63,7 @@ void testGoodBMPImagesSaving(string fileName) {
   "badrleter.bmp", "pal8badindex.bmp", "rgb16-880.bmp", "shortfile.bmp")
 void testBadBMPImages(string fileName) {
     shouldThrow!(ImageException)(
-        load!32("test/bmp_suite/b/" ~ fileName)
+        load!ulong("test/bmp_suite/b/" ~ fileName)
     );
 }
 
@@ -79,7 +77,7 @@ void testBadBMPImages(string fileName) {
   "rgb24png.bmp", "rgb32-7187.bmp", "rgba16-1924.bmp", "rgba32-81284.bmp")
 void testQuestionableBMPImages(string fileName) {
     try {
-        auto image = load!32("test/bmp_suite/q/" ~ fileName);
+        auto image = load!ulong("test/bmp_suite/q/" ~ fileName);
         assert(image !is null);
     } catch (ImageException e) {
         assert(true);

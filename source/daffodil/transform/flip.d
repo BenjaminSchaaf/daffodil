@@ -8,7 +8,7 @@ import daffodil.image;
  * Flip ``image`` along ``axis`` in-place. ``axis`` may contain ``x``, ``y`` or
  * both.
  */
-void flip(string axis, size_t bpc)(Image!bpc image) {
+void flip(string axis, V)(Image!V image) {
     static if (canFind(axis, 'x')) {
         foreach (y; 0..image.height) {
             foreach (x; 0..image.width/2) {
@@ -34,7 +34,7 @@ void flip(string axis, size_t bpc)(Image!bpc image) {
  * Same as :d:func:`flip` but performs the operation on a copy of ``image``.
  * Allows for stringing operations together.
  */
-auto flipped(string axis, size_t bpc)(const Image!bpc image) {
+auto flipped(string axis, V)(const Image!V image) {
     auto output = image.dup;
     output.flip!axis();
     return output;
@@ -44,7 +44,7 @@ auto flipped(string axis, size_t bpc)(const Image!bpc image) {
 unittest {
     import daffodil;
 
-    auto image = new Image!8(2, 2, 3, new RGB!8);
+    auto image = new Image!ubyte(2, 2, 3, RGB!ubyte);
     image[0, 0] = [1f, 1f, 1f];
     image[0, 1] = [1f, 0f, 0f];
     image[1, 0] = [0f, 1f, 0f];

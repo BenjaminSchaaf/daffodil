@@ -64,15 +64,15 @@ unittest {
 /**
  * Documentation
  */
-auto load(size_t bpc, T : DataRange)(T data, BmpMetaData meta = null) {
+auto load(V, T : DataRange)(T data, BmpMetaData meta = null) {
     enforce!InvalidImageType(check(data), "Data does not contain a bmp image.");
 
     if (meta is null) meta = loadMeta(data);
-    return new Image!bpc(loadImage(data, meta), new RGB!bpc(), meta);
+    return new Image!V(loadImage(data, meta), RGB!V, meta);
 }
 /// Ditto
-auto load(size_t bpc, T)(T loadeable) if (isLoadeable!T) {
-    return load!bpc(dataLoad(loadeable));
+auto load(V, T)(T loadeable) if (isLoadeable!T) {
+    return load!V(dataLoad(loadeable));
 }
 
 // The default rgba masks for common formats
@@ -189,11 +189,11 @@ auto loadImage(T)(T loadeable, BmpMetaData meta) if (isLoadeable!T) {
 /**
  * Documentation
  */
-void save(size_t bpc, R)(Image!bpc image, R output) if (isOutputRange!(R, ubyte)) {
+void save(V, R)(Image!V image, R output) if (isOutputRange!(R, ubyte)) {
     saveImage(output, image.range, cast(BmpMetaData)image.meta);
 }
 /// Ditto
-void save(size_t bpc, T)(Image!bpc image, T saveable) if (isSaveable!T) {
+void save(V, T)(Image!V image, T saveable) if (isSaveable!T) {
     save(image, dataSave(saveable));
 }
 

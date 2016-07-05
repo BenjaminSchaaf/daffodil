@@ -48,7 +48,7 @@ auto detectFormat(T)(T loadeable) if (isLoadeable!T) {
     return detectFormat(dataLoad(loadeable));
 }
 /// Ditto
-Format detectFormat(size_t bpc)(const Image!bpc image) {
+Format detectFormat(V)(const Image!V image) if (isColorValue!V) {
     auto typeInfo = typeid(image.meta);
     foreach (format; formats) {
         if (format.metaType && format.metaType == typeInfo) {
@@ -73,26 +73,26 @@ auto loadMeta(T)(T loadeable) if (isLoadeable!T) {
 /**
  * Loads a :d:class:`Image` from a given input.
  */
-auto load(size_t bpc, T)(T data) if (isDataRange!T) {
+auto load(V, T)(T data) if (isColorValue!V && isDataRange!T) {
     auto range = data.inputRangeObject;
     auto format = detectFormat(data);
     auto meta = format.loadMeta(range);
-    return new Image!bpc(format.loadImage(range, meta), new RGB!bpc, meta);
+    return new Image!V(format.loadImage(range, meta), RGB!V, meta);
 }
 /// Ditto
-auto load(size_t bpc, T)(T loadeable) if (isLoadeable!T) {
-    return load!bpc(dataLoad(loadeable));
+auto load(V, T)(T loadeable) if (isColorValue!V && isLoadeable!T) {
+    return load!V(dataLoad(loadeable));
 }
 
 /**
  * Saves a particular :d:class:`Image` to a given output.
  */
-void save(size_t bpc, T)(const Image!bpc image, T data) if (isOutRange!T) {
+void save(V, T)(const Image!V image, T data) if (isColorValue!V && isOutRange!T) {
     auto format = detectFormat(image);
     format.save(data.outputRangeObject!ubyte, image.range.imageRangeObject, image.meta);
 }
 /// Ditto
-void save(size_t bpc)(const Image!bpc image, string path) {
+void save(V)(const Image!V image, string path) if (isColorValue!V) {
     // Specialcase for paths, to match by extension
     Nullable!Format format;
     foreach (f; formats) {
@@ -110,7 +110,7 @@ void save(size_t bpc)(const Image!bpc image, string path) {
     format.save(data, image.range.imageRangeObject, image.meta);
 }
 /// Ditto
-void save(size_t bpc, T)(const Image!bpc image, T saveable) if (isSaveable!T) {
+void save(V, T)(const Image!V image, T saveable) if (isColorValue!V && isSaveable!T && !is(T == string)) {
     return save(image, dataSave(saveable));
 }
 

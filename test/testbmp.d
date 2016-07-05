@@ -7,7 +7,7 @@ import unit_threaded;
 @("fails on empty file")
 unittest {
     shouldThrow!(ImageException)(
-        bmp.load!8("test/images/empty.file")
+        bmp.load!ubyte("test/images/empty.file")
     );
 }
 
@@ -22,7 +22,7 @@ unittest {
 
 @("load BMP image data")
 unittest {
-    auto image = load!8("test/images/bmp_small-24bpp.bmp");
+    auto image = load!ubyte("test/images/bmp_small-24bpp.bmp");
     assert(image !is null);
     assert(image.width == 41);
     assert(image.height == 45);
@@ -40,7 +40,7 @@ unittest {
     import std.algorithm;
 
     auto imageData = File("test/images/bmp_small-24bpp.bmp").byChunk(4096).joiner.array;
-    auto image = load!8(imageData.iter);
+    auto image = load!ubyte(imageData.iter);
 
     auto buffer = new OutBuffer();
     image.save(buffer);

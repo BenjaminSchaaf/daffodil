@@ -14,7 +14,7 @@ import daffodil.color;
  *
  * TODO: Abstract away matrix, width and center into a kernel
  */
-auto convolved(size_t bpc)(const Image!bpc image, const real[] matrix, int width, int[2] center) {
+auto convolved(V)(const Image!V image, const real[] matrix, int width, int[2] center) {
     auto height = matrix.length / width;
     auto ret = image.dup;
 
@@ -49,8 +49,8 @@ auto convolved(size_t bpc)(const Image!bpc image, const real[] matrix, int width
     return ret;
 }
 /// Ditto
-auto convolved(string axis, size_t bpc)(const Image!bpc image, const real[] matrix, int center) {
-    auto ret = cast(Image!bpc)image;
+auto convolved(string axis, V)(const Image!V image, const real[] matrix, int center) {
+    auto ret = image.dup;
 
     static if (canFind(axis, 'x')) {
         // Apply matrix horizontally
@@ -65,7 +65,7 @@ auto convolved(string axis, size_t bpc)(const Image!bpc image, const real[] matr
     return ret;
 }
 /// Ditto
-auto convolved(string axis, size_t bpc)(const Image!bpc image, const real[] matrix) {
+auto convolved(string axis, V)(const Image!V image, const real[] matrix) {
     return image.convolved!axis(matrix, cast(int)(matrix.length / 2));
 }
 

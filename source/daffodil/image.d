@@ -18,19 +18,11 @@ import daffodil.util.types;
  * Holds a two dimensional array of pixels in a specified format, allowing
  * generic transformations and manipulations using other interfaces.
  */
-class Image(size_t bpc_) {
-    /**
-     * Number of bits per channel.
-     */
-    enum bpc = bpc_;
-
+class Image(V) if (isColorValue!V) {
     /**
      * Storage type for each value in a channel.
      */
-    alias Value = Integer!bpc;
-
-    /// The maximum value for any channel value.
-    enum maxValue = pow(2, bpc) - 1;
+    alias Value = V;
 
     /// The metadata of the image.
     MetaData meta;
@@ -40,7 +32,7 @@ class Image(size_t bpc_) {
         size_t    _channelCount;
         Value[]   raster;
 
-        const ColorSpace!bpc colorSpace;
+        const ColorSpace!Value* colorSpace;
     }
 
     /**
@@ -48,7 +40,7 @@ class Image(size_t bpc_) {
      * Pixels default to `init`
      */
     this(size_t width, size_t height, size_t channelCount,
-         ColorSpace!bpc colorSpace, MetaData meta = null) {
+         ColorSpace!Value* colorSpace, MetaData meta = null) {
         _size = [width, height];
         this._channelCount = channelCount;
         this.colorSpace = colorSpace;
@@ -60,7 +52,7 @@ class Image(size_t bpc_) {
      * Create a Image from a given image range, color space and optional
      * metadata.
      */
-    this(R)(R range, ColorSpace!bpc colorSpace,
+    this(R)(R range, ColorSpace!Value* colorSpace,
             MetaData meta = null) if (isImageRange!R &&
                                       is(ElementType!R == PixelData)) {
         this(range.width, range.height, range.channelCount, colorSpace, meta);
@@ -100,18 +92,18 @@ class Image(size_t bpc_) {
         auto index = (x + y * width) * channelCount;
         auto slice = raster[index..index + channelCount];
 
-        return Pixel!bpc(cast(Value[])slice, colorSpace);
+        return Pixel!Value(cast(Value[])slice, colorSpace);
     }
     /// Ditto
-    void opIndexAssign(const Pixel!bpc color, size_t x, size_t y) {
-        (cast(Pixel!bpc)this[x, y]).opAssign(color);
+    void opIndexAssign(const Pixel!Value color, size_t x, size_t y) {
+        (cast(Pixel!Value)this[x, y]).opAssign(color);
     }
     /// Ditto
     void opIndexAssign(real[] values, size_t x, size_t y) {
         assert(values.length == channelCount);
         auto index = (x + y * width) * channelCount;
         foreach (i; 0..channelCount) {
-            raster[index + i] = cast(Value)(values[i] * maxValue);
+            raster[index + i] = colorValueFromReal!Value(values[i]);
         }
     }
 
@@ -119,7 +111,7 @@ class Image(size_t bpc_) {
      * Create a new color within the color space of the image.
      */
     auto newColor() const {
-        return Pixel!bpc(channelCount, colorSpace);
+        return Pixel!Value(channelCount, colorSpace);
     }
 
     /// Return a copy of the image.
@@ -150,26 +142,20 @@ class Image(size_t bpc_) {
             real[] opIndex(size_t x, size_t y) {
                 auto color = image[x, y];
                 foreach (index; 0..channelCount) {
-                    outBuffer[index] = color[index] / cast(real)maxValue;
+                    outBuffer[index] = realFromColorValue(color[index]);
                 }
                 return outBuffer;
             }
         }
+        static assert(isRandomAccessImageRange!Range);
 
         return Range(this);
     }
 }
 
-@("Image bpp property")
-unittest {
-    assert((Image!24).bpc == 24);
-    assert((Image!31).bpc == 31);
-    assert((Image!568).bpc == 568);
-}
-
 @("Image size properties")
 unittest {
-    auto image = new Image!32(123, 234, 1, new RGB!32);
+    auto image = new Image!uint(123, 234, 1, RGB!uint);
     assert(image.width == 123);
     assert(image.height == 234);
     assert(image.size == [123, 234]);
@@ -179,11 +165,12 @@ unittest {
 
 @("Image to string")
 unittest {
-    auto image = new Image!32(2, 2, 3, new RGB!32);
+    auto image = new Image!uint(2, 2, 3, RGB!uint);
     assert(image.toString == "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
 }
 
 @("Image range")
 unittest {
-    static assert(isRandomAccessImageRange!(typeof(Image!8.range)));
+    auto image = new Image!uint(2, 2, 3, RGB!uint);
+    assert(isRandomAccessImageRange!(typeof(image.range)));
 }
