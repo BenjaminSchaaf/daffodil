@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
 
   
 
@@ -147,9 +149,15 @@
 <code class="descname">module daffodil.color</code></dt>
 <dd><p>This module contains the implementation for the internal color storage
 mechanisms.</p>
+<dl class="daffodil.color.ColorSpace">
+<dt>
+<code class="descname">struct ColorSpace(V)</code></dt>
+<dd><p>A group of functions describing the operations for a <code class="xref d d-struct docutils literal"><span class="pre">Pixel</span></code>.</p>
+</dd></dl>
+
 <dl class="daffodil.color.Pixel">
 <dt>
-<code class="descname">struct Pixel(size_t bpc)</code></dt>
+<code class="descname">struct Pixel(V)</code></dt>
 <dd><p>The storage struct for a color.</p>
 <dl class="daffodil.color.Pixel.values">
 <dt>
@@ -159,7 +167,7 @@ mechanisms.</p>
 
 <dl class="daffodil.color.Pixel.colorSpace">
 <dt>
-<code class="descname">ColorSpace!bpc colorSpace</code></dt>
+<code class="descname">ColorSpace!V colorSpace</code></dt>
 <dd><p>The color space used for operations with the color</p>
 </dd></dl>
 
@@ -172,12 +180,12 @@ mechanisms.</p>
 
 <dl class="daffodil.color.Pixel.opBinary">
 <dt>
-<code class="descname">Pixel!bpc opBinary(real other)</code></dt>
+<code class="descname">Pixel!V opBinary(real other)</code></dt>
 <dd></dd></dl>
 
 <dl class="daffodil.color.Pixel.opBinary">
 <dt>
-<code class="descname">Pixel!bpc opBinary(Pixel!bpc other)</code></dt>
+<code class="descname">Pixel!V opBinary(Pixel!V other)</code></dt>
 <dd></dd></dl>
 
 <dl class="daffodil.color.Pixel.opOpAssign">
@@ -187,12 +195,12 @@ mechanisms.</p>
 
 <dl class="daffodil.color.Pixel.opOpAssign">
 <dt>
-<code class="descname">void opOpAssign(Pixel!bpc other)</code></dt>
+<code class="descname">void opOpAssign(Pixel!V other)</code></dt>
 <dd></dd></dl>
 
 <dl class="daffodil.color.Pixel.opAssign">
 <dt>
-<code class="descname">void opAssign(Pixel!bpc other)</code></dt>
+<code class="descname">void opAssign(Pixel!V other)</code></dt>
 <dd></dd></dl>
 
 <dl class="daffodil.color.Pixel.clear">
@@ -211,7 +219,7 @@ mechanisms.</p>
 
 <dl class="daffodil.color.RGB">
 <dt>
-<code class="descname">class RGB(size_t bpc)</code></dt>
+<code class="descname">auto RGB()</code></dt>
 <dd><p>A color space implementation for RGB colors</p>
 </dd></dl>
 

@@ -13,6 +13,8 @@
 
   
   
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
 
   
 
@@ -153,11 +155,11 @@
 <code class="descname">module daffodil.filter.convolve</code></dt>
 <dd><dl class="daffodil.filter.convolve.convolved">
 <dt>
-<code class="descname">auto convolved(Image!bpc image, real[] matrix, int width, int[] center)</code></dt>
+<code class="descname">auto convolved(Image!V image, real[] matrix, int width, int[] center)</code></dt>
 <dt>
-<code class="descname">auto convolved(Image!bpc image, real[] matrix, int center)</code></dt>
+<code class="descname">auto convolved(Image!V image, real[] matrix, int center)</code></dt>
 <dt>
-<code class="descname">auto convolved(Image!bpc image, real[] matrix)</code></dt>
+<code class="descname">auto convolved(Image!V image, real[] matrix)</code></dt>
 <dd><p>Convolve a flat 2D matrix with a given center over an image and return the result.</p>
 <p>With a matrix [0.5, 0.5] with width 2 and center [0, 0] convolved over an image
 each resulting pixel will be a 50:50 mix of itself and its right neighbour.</p>
