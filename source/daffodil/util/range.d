@@ -5,6 +5,10 @@ module daffodil.util.range;
 
 public import std.range;
 
+template isImageRange(R, E) {
+    enum bool isImageRange = isImageRange!R && is(ElementType!R == E);
+}
+
 template isImageRange(R) {
     enum bool isImageRange = isInputRange!R && is(typeof(
         (inout int = 0) {

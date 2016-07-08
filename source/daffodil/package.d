@@ -114,11 +114,15 @@ void save(V, T)(const Image!V image, T saveable) if (isColorValue!V && isSaveabl
     return save(image, dataSave(saveable));
 }
 
+///
 alias DataRange = InputRange!ubyte;
+///
 template isDataRange(T) {
     enum isDataRange = isInputRange!T && is(ElementType!T == ubyte);
 }
+///
 alias OutRange = OutputRange!ubyte;
+///
 alias isOutRange(T) = isOutputRange!(T, ubyte);
 
 /**
@@ -135,7 +139,7 @@ struct Format {
     ///
     ImageRange!PixelData function(DataRange, MetaData) loadImage;
     ///
-    void function(OutputRange!ubyte, RandomAccessImageRange!(real[]), const MetaData) save;
+    void function(OutRange, RandomAccessImageRange!(real[]), const MetaData) save;
     ///
     string[] extensions;
     ///

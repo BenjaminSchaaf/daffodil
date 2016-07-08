@@ -52,8 +52,7 @@ class Image(V) if (isColorValue!V) {
      * metadata.
      */
     this(R)(R range, ColorSpace!Value* colorSpace,
-            MetaData meta = null) if (isImageRange!R &&
-                                      is(ElementType!R == PixelData)) {
+            MetaData meta = null) if (isImageRange!(R, PixelData)) {
         this(range.width, range.height, range.channelCount, colorSpace, meta);
 
         foreach (pixel; range) {
@@ -75,9 +74,12 @@ class Image(V) if (isColorValue!V) {
      * Get the width and height of the Image.
      */
     @property auto width() const { return _size[0]; }
-    @property auto height() const { return _size[1]; } /// Ditto
-    @property auto size() const { return _size; } /// Ditto
-    auto opDollar(size_t pos)() const { return _size[pos]; } /// Ditto
+    /// Ditto
+    @property auto height() const { return _size[1]; }
+    /// Ditto
+    @property auto size() const { return _size; }
+    /// Ditto
+    auto opDollar(size_t pos)() const { return _size[pos]; }
 
     /**
      * Get the number of channels in the image.
@@ -118,6 +120,7 @@ class Image(V) if (isColorValue!V) {
         return new Image(this);
     }
 
+    ///
     override string toString() const {
         return raster.to!string;
     }

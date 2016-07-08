@@ -122,6 +122,7 @@ struct Pixel(V) if (isColorValue!V) {
     return &cache;
 }
 
+///
 template isColorValue(V) {
     enum isColorValue = isFloatingPoint!V ||
                         isIntegral!V && isUnsigned!V ||
@@ -137,6 +138,7 @@ unittest {
     assert(isColorValue!float);
 }
 
+///
 template isCustomColorValue(V) {
     enum isCustomColorValue = is(typeof(
         (inout int = 0) {
