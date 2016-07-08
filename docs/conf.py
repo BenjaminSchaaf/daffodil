@@ -48,7 +48,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Daffodil'
+project = 'daffodil'
 copyright = '2015, Cameron Lonsdale, Benjamin Schaaf'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -103,12 +103,22 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+html_theme_options = {
+    'logo': None,
+    'logo_name': True,
+    'description': 'Image Processing Library for D',
+    'github_user': 'BenjaminSchaaf',
+    'github_repo': 'daffodil',
+    'github_button': False,
+    'github_banner': True,
+    'travis_button': True,
+    'page_width': '1420px',
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
@@ -148,7 +158,15 @@ html_static_path = ['_static']
 #html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-#html_sidebars = {}
+html_sidebars = {
+    '**': [
+        'about.html',
+        'navigation.html',
+        'relations.html',
+        'searchbox.html',
+        'donate.html',
+    ]
+}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
