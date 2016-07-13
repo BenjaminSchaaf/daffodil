@@ -215,5 +215,6 @@ deploy: html
 	$(eval tmp = mktemp -d)
 	cp $(BUILDDIR)/html $tmp -r
 	git checkout gh-pages
+	git clean -e $tmp -xdf
 	cp $tmp/* . -r
 	rm -rf $tmp
