@@ -64,14 +64,14 @@ unittest {
 /**
  * Documentation
  */
-auto load(V, T : DataRange)(T data, BmpMetaData meta = null) {
+auto load(V = real, T : DataRange)(T data, BmpMetaData meta = null) {
     enforce!InvalidImageType(check(data), "Data does not contain a bmp image.");
 
     if (meta is null) meta = loadMeta(data);
     return new Image!V(loadImage(data, meta), meta);
 }
 /// Ditto
-auto load(V, T)(T loadeable) if (isLoadeable!T) {
+auto load(V = real, T)(T loadeable) if (isLoadeable!T) {
     return load!V(dataLoad(loadeable));
 }
 
@@ -189,11 +189,11 @@ auto loadImage(T)(T loadeable, BmpMetaData meta) if (isLoadeable!T) {
 /**
  * Documentation
  */
-void save(V, R)(Image!V image, R output) if (isOutputRange!(R, ubyte)) {
+void save(V = real, R)(Image!V image, R output) if (isOutputRange!(R, ubyte)) {
     saveImage(output, image.range, cast(BmpMetaData)image.meta);
 }
 /// Ditto
-void save(V, T)(Image!V image, T saveable) if (isSaveable!T) {
+void save(V = real, T)(Image!V image, T saveable) if (isSaveable!T) {
     save(image, dataSave(saveable));
 }
 
