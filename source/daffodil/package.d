@@ -14,7 +14,8 @@ import daffodil.util.range;
 public {
     import daffodil.meta;
     import daffodil.image;
-    import daffodil.color;
+    import daffodil.pixel;
+    import daffodil.colorspace;
     import daffodil.util.errors;
 
     // Submodules
@@ -77,7 +78,7 @@ auto load(V, T)(T data) if (isColorValue!V && isDataRange!T) {
     auto range = data.inputRangeObject;
     auto format = detectFormat(data);
     auto meta = format.loadMeta(range);
-    return new Image!V(format.loadImage(range, meta), RGB!V, meta);
+    return new Image!V(format.loadImage(range, meta), meta);
 }
 /// Ditto
 auto load(V, T)(T loadeable) if (isColorValue!V && isLoadeable!T) {

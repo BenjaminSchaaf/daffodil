@@ -3,8 +3,6 @@
  */
 module daffodil.meta;
 
-import daffodil.color;
-
 /**
  * Metadata class for images.
  * Any image format can defined subclasses to provide more format-specific

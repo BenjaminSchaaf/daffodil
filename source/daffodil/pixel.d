@@ -1,24 +1,16 @@
 /**
- * This module contains the implementation for the internal color storage
+ * This module contains the implementation for the internal pixel storage
  * mechanisms.
  */
-module daffodil.color;
+module daffodil.pixel;
 
 import std.conv;
-import std.math;
 import std.array;
 import std.format;
 import std.traits;
 import std.algorithm;
 
-/**
- * A group of functions describing the operations for a :d:struct:`Pixel`.
- */
-struct ColorSpace(V) if (isColorValue!V) {
-    void function(const V[], const real, V[]) opScalarMul;
-    void function(const V[], const V[], V[]) opColorAdd;
-    string function(const V[]) toString;
-}
+import daffodil.colorspace;
 
 /**
  * The storage struct for a color.
@@ -31,34 +23,43 @@ struct Pixel(V) if (isColorValue!V) {
     Value[] values;
 
     /// The color space used for operations with the color
-    const ColorSpace!V* colorSpace;
+    const ColorSpace* colorSpace;
 
     alias values this;
 
     ///
-    this(Value[] values, const ColorSpace!V* colorSpace) {
+    this(Value[] values, const ColorSpace* colorSpace) {
         this.values = values;
         this.colorSpace = colorSpace;
     }
 
     /// Ditto
-    this(size_t size, const ColorSpace!V* colorSpace) {
+    static if (!is(V == real)) {
+        this(real[] values, const ColorSpace* colorSpace) {
+            this(values.toColorValues!V, colorSpace);
+        }
+    }
+
+    /// Ditto
+    this(size_t size, const ColorSpace* colorSpace) {
         this(new Value[size], colorSpace);
     }
 
+    // TODO: Memory optimisation
+
     ///
     Pixel!V opBinary(string op : "*")(const real other) const {
-        auto ret = Pixel!V(this.length, colorSpace);
-        colorSpace.opScalarMul(values, other, ret.values);
-        return ret;
+        real[] target = new real[this.length];
+        colorSpace.opScalarMul(values.toReals, other, target);
+        return Pixel!V(target, colorSpace);
     }
 
     ///
     Pixel!V opBinary(string op : "+")(const Pixel!V other) const {
         // TODO: Check other.colorSpace
-        auto ret = Pixel!V(this.length, colorSpace);
-        colorSpace.opColorAdd(values, other, ret.values);
-        return ret;
+        real[] target = new real[this.length];
+        colorSpace.opColorAdd(values.toReals, other.values.toReals, target);
+        return Pixel!V(target, colorSpace);
     }
 
     ///
@@ -92,36 +93,6 @@ struct Pixel(V) if (isColorValue!V) {
     }
 }
 
-/// A color space implementation for RGB colors
-@property auto RGB(V)() if (isColorValue!V) {
-    static cache = ColorSpace!V(
-        (const V[] self, const real other, V[] target) {
-            assert(self.length == target.length);
-
-            foreach (index; 0..self.length) {
-                target[index] = cast(V)(self[index] * other);
-            }
-        },
-        (const V[] self, const V[] other, V[] target) {
-            assert(self.length == target.length);
-            assert(self.length == other.length);
-            foreach (index; 0..self.length) {
-                target[index] = cast(V)min(self[index] + other[index], V.max);
-            }
-        },
-        (const V[] self) {
-            string output = "(";
-            foreach (index; 0..self.length) {
-                if (index == 0) output ~= ", ";
-                output ~= realFromColorValue(self[index]).to!string;
-            }
-            return output ~ ")";
-        },
-    );
-
-    return &cache;
-}
-
 ///
 template isColorValue(V) {
     enum isColorValue = isFloatingPoint!V ||
@@ -149,6 +120,7 @@ template isCustomColorValue(V) {
     ));
 }
 
+// DMD can't compile this unless its outside the unittest
 version(unittest) {
     private struct IntColorValue {
         int value = 0;
@@ -169,7 +141,7 @@ unittest {
     assert(isColorValue!IntColorValue);
 }
 
-V colorValueFromReal(V)(real value) if (isColorValue!V) {
+V toColorValue(V)(const real value) if (isColorValue!V) {
     static if (isFloatingPoint!V) {
         return value;
     } else static if (isIntegral!V) {
@@ -179,7 +151,11 @@ V colorValueFromReal(V)(real value) if (isColorValue!V) {
     }
 }
 
-real realFromColorValue(V)(V value) if (isColorValue!V) {
+V[] toColorValues(V)(const real[] values) if (isColorValue!V) {
+    return values.map!(toColorValue!V).array;
+}
+
+real toReal(V)(const V value) if (isColorValue!V) {
     static if (isFloatingPoint!V) {
         return value;
     } else static if (isIntegral!V) {
@@ -187,4 +163,8 @@ real realFromColorValue(V)(V value) if (isColorValue!V) {
     } else {
         return value.toReal();
     }
+}
+
+real[] toReals(V)(const V[] values) if (isColorValue!V) {
+    return values.map!(toReal!V).array;
 }

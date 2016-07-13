@@ -68,7 +68,7 @@ auto load(V, T : DataRange)(T data, BmpMetaData meta = null) {
     enforce!InvalidImageType(check(data), "Data does not contain a bmp image.");
 
     if (meta is null) meta = loadMeta(data);
-    return new Image!V(loadImage(data, meta), RGB!V, meta);
+    return new Image!V(loadImage(data, meta), meta);
 }
 /// Ditto
 auto load(V, T)(T loadeable) if (isLoadeable!T) {
@@ -179,7 +179,7 @@ auto loadImage(R)(R data, BmpMetaData meta) if (isInputRange!R &&
     }
 
     return maskedRasterLoad(data, masks, dib.bitCount,
-                            dib.width, -dib.height, 4);
+                            dib.width, -dib.height, &RGB, 4);
 }
 /// Ditto
 auto loadImage(T)(T loadeable, BmpMetaData meta) if (isLoadeable!T) {

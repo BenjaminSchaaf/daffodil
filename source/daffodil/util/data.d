@@ -81,6 +81,7 @@ auto maskedRasterLoad(R, T)(
         size_t bpp,
         ptrdiff_t _width,
         ptrdiff_t _height,
+        const ColorSpace* _colorSpace,
         size_t padding = 1) if (isInputRange!R &&
                                 is(ElementType!R == ubyte)) {
     // currently don't support non multiples of 8
@@ -129,6 +130,7 @@ auto maskedRasterLoad(R, T)(
 
         @property size_t width() { return _width; }
         @property size_t height() { return abs(_height); }
+        @property auto colorSpace() const { return _colorSpace; }
     }
 
     return Range(data);

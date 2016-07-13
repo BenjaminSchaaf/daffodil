@@ -4,7 +4,6 @@ import std.range;
 import std.algorithm;
 
 import daffodil.image;
-import daffodil.color;
 
 /**
  * Convolve a flat 2D matrix with a given center over an image and return the result.

@@ -31,7 +31,7 @@ class Image(V) if (isColorValue!V) {
         size_t    _channelCount;
         Value[]   raster;
 
-        const ColorSpace!Value* colorSpace;
+        const ColorSpace* colorSpace;
     }
 
     /**
@@ -39,7 +39,7 @@ class Image(V) if (isColorValue!V) {
      * Pixels default to `init`
      */
     this(size_t width, size_t height, size_t channelCount,
-         ColorSpace!Value* colorSpace, MetaData meta = null) {
+         const ColorSpace* colorSpace, MetaData meta = null) {
         _size = [width, height];
         this._channelCount = channelCount;
         this.colorSpace = colorSpace;
@@ -51,9 +51,8 @@ class Image(V) if (isColorValue!V) {
      * Create a Image from a given image range, color space and optional
      * metadata.
      */
-    this(R)(R range, ColorSpace!Value* colorSpace,
-            MetaData meta = null) if (isImageRange!(R, PixelData)) {
-        this(range.width, range.height, range.channelCount, colorSpace, meta);
+    this(R)(R range, MetaData meta = null) if (isImageRange!(R, PixelData)) {
+        this(range.width, range.height, range.channelCount, range.colorSpace, meta);
 
         foreach (pixel; range) {
             this[pixel.x, pixel.y] = pixel.data;
@@ -104,7 +103,7 @@ class Image(V) if (isColorValue!V) {
         assert(values.length == channelCount);
         auto index = (x + y * width) * channelCount;
         foreach (i; 0..channelCount) {
-            raster[index + i] = colorValueFromReal!Value(values[i]);
+            raster[index + i] = values[i].toColorValue!Value;
         }
     }
 
@@ -138,13 +137,14 @@ class Image(V) if (isColorValue!V) {
             @property auto width() { return image.width; }
             @property auto height() { return image.height;}
             @property auto channelCount() { return image.channelCount; }
+            @property auto colorSpace() { return image.colorSpace; }
             @property auto front() { return outBuffer; }
             @property auto empty() { return false; }
             void popFront() {}
             real[] opIndex(size_t x, size_t y) {
                 auto color = image[x, y];
                 foreach (index; 0..channelCount) {
-                    outBuffer[index] = realFromColorValue(color[index]);
+                    outBuffer[index] = color[index].toReal;
                 }
                 return outBuffer;
             }
@@ -157,7 +157,7 @@ class Image(V) if (isColorValue!V) {
 
 @("Image size properties")
 unittest {
-    auto image = new Image!uint(123, 234, 1, RGB!uint);
+    auto image = new Image!uint(123, 234, 1, &RGB);
     assert(image.width == 123);
     assert(image.height == 234);
     assert(image.size == [123, 234]);
@@ -167,12 +167,12 @@ unittest {
 
 @("Image to string")
 unittest {
-    auto image = new Image!uint(2, 2, 3, RGB!uint);
+    auto image = new Image!uint(2, 2, 3, &RGB);
     assert(image.toString == "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
 }
 
 @("Image range")
 unittest {
-    auto image = new Image!uint(2, 2, 3, RGB!uint);
+    auto image = new Image!uint(2, 2, 3, &RGB);
     assert(isRandomAccessImageRange!(typeof(image.range)));
 }

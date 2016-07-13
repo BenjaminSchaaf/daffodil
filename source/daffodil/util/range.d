@@ -5,6 +5,8 @@ module daffodil.util.range;
 
 public import std.range;
 
+import daffodil.colorspace;
+
 template isImageRange(R, E) {
     enum bool isImageRange = isImageRange!R && is(ElementType!R == E);
 }
@@ -16,6 +18,7 @@ template isImageRange(R) {
             size_t w = r.width;
             size_t h = r.height;
             size_t c = r.channelCount;
+            const ColorSpace* s = r.colorSpace;
         }
     ));
 }
@@ -33,6 +36,7 @@ interface ImageRange(E) : InputRange!E {
     @property size_t width();
     @property size_t height();
     @property size_t channelCount();
+    @property const(ColorSpace*) colorSpace();
 }
 
 unittest {
@@ -72,6 +76,7 @@ class ImageRangeObject(R) : MostDerivedImageRange!R if (isImageRange!R) {
     @property size_t width() { return _range.width; }
     @property size_t height() { return _range.height; }
     @property size_t channelCount() { return _range.channelCount; }
+    @property const(ColorSpace*) colorSpace() { return _range.colorSpace; }
 
     E moveFront() {
         return .moveFront(_range);

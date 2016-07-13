@@ -1,0 +1,4 @@
+colorspace
+##########
+
+.. automodule:: daffodil.colorspace
