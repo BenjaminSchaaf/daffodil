@@ -93,13 +93,20 @@ struct Pixel(V) if (isColorValue!V) {
     }
 }
 
-///
+/**
+ * Template for checking whether a type is a valid color value. Color values are
+ * what daffodil stores internally.
+ *
+ * Any floating point type, unsigned integreal or valid
+ * :d:func:`isCustomColorValue` is a valid color value.
+ */
 template isColorValue(V) {
     enum isColorValue = isFloatingPoint!V ||
                         isIntegral!V && isUnsigned!V ||
                         isCustomColorValue!V;
 }
 
+///
 @("isColorValue")
 unittest {
     assert(isColorValue!ubyte);
@@ -107,9 +114,15 @@ unittest {
     assert(isColorValue!ulong);
     assert(!isColorValue!int);
     assert(isColorValue!float);
+    assert(isColorValue!real);
 }
 
-///
+/**
+ * Template for checking whether a type is a valid custom color value. A custom
+ * color value must have a static ``init`` property, a static ``fromReal`` that
+ * converts a real to ``V``, and a ``toReal`` function that converts a ``V``
+ * back to a real.
+ */
 template isCustomColorValue(V) {
     enum isCustomColorValue = is(typeof(
         (inout int = 0) {
@@ -120,27 +133,28 @@ template isCustomColorValue(V) {
     ));
 }
 
-// DMD can't compile this unless its outside the unittest
-version(unittest) {
-    private struct IntColorValue {
+///
+@("isCustomColorValue")
+unittest {
+    static struct IntCV {
         int value = 0;
 
         static auto fromReal(real v) {
-            return IntColorValue(cast(int)(v / int.max));
+            return IntCV(cast(int)(v / int.max));
         }
 
         real toReal() {
             return cast(real)value / int.max;
         }
     }
+
+    assert(isCustomColorValue!IntCV);
+    assert(isColorValue!IntCV);
 }
 
-@("isCustomColorValue")
-unittest {
-    assert(isCustomColorValue!IntColorValue);
-    assert(isColorValue!IntColorValue);
-}
-
+/**
+ * Converts a real to a specified color value.
+ */
 V toColorValue(V)(const real value) if (isColorValue!V) {
     static if (isFloatingPoint!V) {
         return value;
@@ -151,10 +165,16 @@ V toColorValue(V)(const real value) if (isColorValue!V) {
     }
 }
 
+/**
+ * Converts an array of reals to an array of specified color values.
+ */
 V[] toColorValues(V)(const real[] values) if (isColorValue!V) {
     return values.map!(toColorValue!V).array;
 }
 
+/**
+ * Converts a valid color value to a real.
+ */
 real toReal(V)(const V value) if (isColorValue!V) {
     static if (isFloatingPoint!V) {
         return value;
@@ -165,6 +185,9 @@ real toReal(V)(const V value) if (isColorValue!V) {
     }
 }
 
+/**
+ * Converts an array of valid color values to an array of reals.
+ */
 real[] toReals(V)(const V[] values) if (isColorValue!V) {
     return values.map!(toReal!V).array;
 }
