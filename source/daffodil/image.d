@@ -157,7 +157,7 @@ class Image(V) if (isColorValue!V) {
 
 @("Image size properties")
 unittest {
-    auto image = new Image!uint(123, 234, 1, &RGB);
+    auto image = new Image!uint(123, 234, 1, RGB);
     assert(image.width == 123);
     assert(image.height == 234);
     assert(image.size == [123, 234]);
@@ -167,12 +167,12 @@ unittest {
 
 @("Image to string")
 unittest {
-    auto image = new Image!uint(2, 2, 3, &RGB);
+    auto image = new Image!uint(2, 2, 3, RGB);
     assert(image.toString == "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
 }
 
 @("Image range")
 unittest {
-    auto image = new Image!uint(2, 2, 3, &RGB);
+    auto image = new Image!uint(2, 2, 3, RGB);
     assert(isRandomAccessImageRange!(typeof(image.range)));
 }

@@ -179,7 +179,7 @@ auto loadImage(R)(R data, BmpMetaData meta) if (isInputRange!R &&
     }
 
     return maskedRasterLoad(data, masks, dib.bitCount,
-                            dib.width, -dib.height, &RGB, 4);
+                            dib.width, -dib.height, RGB, 4);
 }
 /// Ditto
 auto loadImage(T)(T loadeable, BmpMetaData meta) if (isLoadeable!T) {

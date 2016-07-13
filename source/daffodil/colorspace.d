@@ -14,7 +14,9 @@ struct ColorSpace {
 }
 
 /// Standard RGB color space
-const RGB = ColorSpace(
+@property const(ColorSpace*) RGB() { return &RGBColorSpace; }
+
+private const RGBColorSpace = ColorSpace(
     (const real[] self, const real other, real[] target) {
         assert(self.length == target.length);
 

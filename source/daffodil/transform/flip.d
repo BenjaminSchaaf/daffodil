@@ -44,7 +44,7 @@ auto flipped(string axis, V)(const Image!V image) {
 unittest {
     import daffodil;
 
-    auto image = new Image!ubyte(2, 2, 3, &RGB);
+    auto image = new Image!ubyte(2, 2, 3, RGB);
     image[0, 0] = [1f, 1f, 1f];
     image[0, 1] = [1f, 0f, 0f];
     image[1, 0] = [0f, 1f, 0f];
