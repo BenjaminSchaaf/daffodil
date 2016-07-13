@@ -5,9 +5,10 @@ daffodil
     :titlesonly:
     :includehidden:
 
-    color
     image
     meta
+    pixel
+    colorspace
     filter/index
     transform/index
 

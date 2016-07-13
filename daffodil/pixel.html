@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pixel &mdash; daffodil 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="top" title="daffodil 1.0 documentation" href="../index.html" />
+    <link rel="up" title="daffodil" href="index.html" />
+    <link rel="next" title="colorspace" href="colorspace.html" />
+    <link rel="prev" title="meta" href="meta.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pixel">
+<h1>pixel<a class="headerlink" href="#pixel" title="Permalink to this headline">¶</a></h1>
+<dl class="daffodil.pixel">
+<dt>
+<code class="descname">module daffodil.pixel</code></dt>
+<dd><p>This module contains the implementation for the internal pixel storage
+mechanisms.</p>
+<dl class="daffodil.pixel.Pixel">
+<dt>
+<code class="descname">struct Pixel(V) if (isColorValue!V)</code></dt>
+<dd><p>The storage struct for a color.</p>
+<dl class="daffodil.pixel.Pixel.Value">
+<dt>
+<code class="descname">alias Value = V</code></dt>
+<dd><p>The type used to store individual values for a color</p>
+</dd></dl>
+
+<dl class="daffodil.pixel.Pixel.values">
+<dt>
+<code class="descname">Value[] values</code></dt>
+<dd><p>The values of the color</p>
+</dd></dl>
+
+<dl class="daffodil.pixel.Pixel.colorSpace">
+<dt>
+<code class="descname">ColorSpace* colorSpace</code></dt>
+<dd><p>The color space used for operations with the color</p>
+</dd></dl>
+
+<dl class="daffodil.pixel.Pixel.this">
+<dt>
+<code class="descname">this(Value[] values, const ColorSpace* colorSpace)</code></dt>
+<dt>
+<code class="descname">this(size_t size, const ColorSpace* colorSpace)</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.pixel.Pixel.opBinary">
+<dt>
+<code class="descname">Pixel!V opBinary(string op : &quot;*&quot;)(const real other) const</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.pixel.Pixel.opBinary">
+<dt>
+<code class="descname">Pixel!V opBinary(string op : &quot;+&quot;)(const Pixel!V other) const</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.pixel.Pixel.opOpAssign">
+<dt>
+<code class="descname">void opOpAssign(string op : &quot;*&quot;)(const real other)</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.pixel.Pixel.opOpAssign">
+<dt>
+<code class="descname">void opOpAssign(string op : &quot;+&quot;)(const Pixel!V other)</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.pixel.Pixel.opAssign">
+<dt>
+<code class="descname">void opAssign(const Pixel!V other)</code></dt>
+<dd></dd></dl>
+
+<dl class="daffodil.pixel.Pixel.clear">
+<dt>
+<code class="descname">void clear()</code></dt>
+<dd><p>Clear all the color values to 0</p>
+</dd></dl>
+
+<dl class="daffodil.pixel.Pixel.dup">
+<dt>
+<code class="descname">&#64;property auto  dup()</code></dt>
+<dd><p>Return a duplicate color in the same color space</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="daffodil.pixel.isColorValue">
+<dt>
+<code class="descname">template isColorValue(V)</code></dt>
+<dd><p>Template for checking whether a type is a valid color value. Color values are
+what daffodil stores internally.</p>
+<p>Any floating point type, unsigned integreal or valid
+<code class="xref d d-func docutils literal"><span class="pre">isCustomColorValue</span></code> is a valid color value.</p>
+<dl class="docutils">
+<dt>Examples:</dt>
+<dd><div class="first last highlight-d"><div class="highlight"><pre><span></span><span class="k">assert</span><span class="p">(</span><span class="n">isColorValue</span><span class="p">!</span><span class="kt">ubyte</span><span class="p">);</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">isColorValue</span><span class="p">!</span><span class="kt">uint</span><span class="p">);</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">isColorValue</span><span class="p">!</span><span class="kt">ulong</span><span class="p">);</span>
+<span class="k">assert</span><span class="p">(!</span><span class="n">isColorValue</span><span class="p">!</span><span class="kt">int</span><span class="p">);</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">isColorValue</span><span class="p">!</span><span class="kt">float</span><span class="p">);</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">isColorValue</span><span class="p">!</span><span class="kt">real</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="daffodil.pixel.isCustomColorValue">
+<dt>
+<code class="descname">template isCustomColorValue(V)</code></dt>
+<dd><p>Template for checking whether a type is a valid custom color value. A custom
+color value must have a static <code class="docutils literal"><span class="pre">init</span></code> property, a static <code class="docutils literal"><span class="pre">fromReal</span></code> that
+converts a real to <code class="docutils literal"><span class="pre">V</span></code>, and a <code class="docutils literal"><span class="pre">toReal</span></code> function that converts a <code class="docutils literal"><span class="pre">V</span></code>
+back to a real.</p>
+<dl class="docutils">
+<dt>Examples:</dt>
+<dd><div class="first last highlight-d"><div class="highlight"><pre><span></span><span class="k">static</span> <span class="k">struct</span> <span class="n">IntCV</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">value</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="k">auto</span> <span class="n">fromReal</span><span class="p">(</span><span class="kt">real</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">IntCV</span><span class="p">(</span><span class="k">cast</span><span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">v</span> <span class="p">/</span> <span class="kt">int</span><span class="p">.</span><span class="n">max</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="kt">real</span> <span class="n">toReal</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">cast</span><span class="p">(</span><span class="kt">real</span><span class="p">)</span><span class="n">value</span> <span class="p">/</span> <span class="kt">int</span><span class="p">.</span><span class="n">max</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">assert</span><span class="p">(</span><span class="n">isCustomColorValue</span><span class="p">!</span><span class="n">IntCV</span><span class="p">);</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">isColorValue</span><span class="p">!</span><span class="n">IntCV</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="daffodil.pixel.toColorValue">
+<dt>
+<code class="descname">V toColorValue(V)(const real value) if (isColorValue!V)</code></dt>
+<dd><p>Converts a real to a specified color value.</p>
+</dd></dl>
+
+<dl class="daffodil.pixel.toColorValues">
+<dt>
+<code class="descname">V[] toColorValues(V)(const real[] values) if (isColorValue!V)</code></dt>
+<dd><p>Converts an array of reals to an array of specified color values.</p>
+</dd></dl>
+
+<dl class="daffodil.pixel.toReal">
+<dt>
+<code class="descname">real toReal(V)(const V value) if (isColorValue!V)</code></dt>
+<dd><p>Converts a valid color value to a real.</p>
+</dd></dl>
+
+<dl class="daffodil.pixel.toReals">
+<dt>
+<code class="descname">real[] toReals(V)(const V[] values) if (isColorValue!V)</code></dt>
+<dd><p>Converts an array of valid color values to an array of reals.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">daffodil</a></h1>
+
+
+
+<p class="blurb">Image Processing Library for D</p>
+
+
+
+
+
+
+
+
+    
+
+<p>
+<a href="https://travis-ci.org/BenjaminSchaaf/daffodil">
+    <img
+        alt="https://secure.travis-ci.org/BenjaminSchaaf/daffodil.svg?branch=master"
+        src="https://secure.travis-ci.org/BenjaminSchaaf/daffodil.svg?branch=master"
+    />
+</a>
+</p>
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">daffodil</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="image.html">image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meta.html">meta</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pixel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colorspace.html">colorspace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filter/index.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transform/index.html">transform</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">daffodil</a><ul>
+      <li>Previous: <a href="meta.html" title="previous chapter">meta</a></li>
+      <li>Next: <a href="colorspace.html" title="next chapter">colorspace</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Cameron Lonsdale, Benjamin Schaaf.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/daffodil/pixel.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/BenjaminSchaaf/daffodil" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

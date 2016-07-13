@@ -1,0 +1,4 @@
+pixel
+#####
+
+.. automodule:: daffodil.pixel

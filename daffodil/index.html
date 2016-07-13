@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="top" title="daffodil 1.0 documentation" href="../index.html" />
-    <link rel="next" title="color" href="color.html" />
+    <link rel="next" title="image" href="image.html" />
     <link rel="prev" title="About" href="../about.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -46,9 +46,10 @@
 <h1>daffodil<a class="headerlink" href="#daffodil" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="color.html">color</a></li>
 <li class="toctree-l1"><a class="reference internal" href="image.html">image</a></li>
 <li class="toctree-l1"><a class="reference internal" href="meta.html">meta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pixel.html">pixel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="colorspace.html">colorspace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="filter/index.html">filter</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="filter/convolve.html">convolve</a></li>
 <li class="toctree-l2"><a class="reference internal" href="filter/gaussian.html">gaussian</a></li>
@@ -69,7 +70,8 @@
 <div><div class="line-block">
 <div class="line"><a class="reference internal" href="meta.html#d:mod:daffodil.meta" title="daffodil.meta"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.meta</span></code></a></div>
 <div class="line"><a class="reference internal" href="image.html#d:mod:daffodil.image" title="daffodil.image"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.image</span></code></a></div>
-<div class="line"><a class="reference internal" href="color.html#d:mod:daffodil.color" title="daffodil.color"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.color</span></code></a></div>
+<div class="line"><a class="reference internal" href="pixel.html#d:mod:daffodil.pixel" title="daffodil.pixel"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.pixel</span></code></a></div>
+<div class="line"><a class="reference internal" href="colorspace.html#d:mod:daffodil.colorspace" title="daffodil.colorspace"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.colorspace</span></code></a></div>
 <div class="line"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.util.errors</span></code></div>
 <div class="line">filter = <a class="reference internal" href="filter/index.html#d:mod:daffodil.filter" title="daffodil.filter"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.filter</span></code></a></div>
 <div class="line">transform = <a class="reference internal" href="transform/index.html#d:mod:daffodil.transform" title="daffodil.transform"><code class="xref d d-mod docutils literal"><span class="pre">daffodil.transform</span></code></a></div>
@@ -82,7 +84,7 @@
 <dt>
 <code class="descname">auto  detectFormat(T)(T loadeable) if (isLoadeable!T)</code></dt>
 <dt>
-<code class="descname">Format detectFormat(V)(const Image!V image) if (isColorValue!V)</code></dt>
+<code class="descname">Format detectFormat(V = real)(const Image!V image) if (isColorValue!V)</code></dt>
 <dd><p>Detects the <code class="xref d d-struct docutils literal"><span class="pre">Format</span></code> a given input is in.</p>
 </dd></dl>
 
@@ -96,19 +98,19 @@
 
 <dl class="daffodil.load">
 <dt>
-<code class="descname">auto  load(V, T)(T data) if (isColorValue!V &amp;&amp; isDataRange!T)</code></dt>
+<code class="descname">auto  load(V = real, T)(T data) if (isColorValue!V &amp;&amp; isDataRange!T)</code></dt>
 <dt>
-<code class="descname">auto  load(V, T)(T loadeable) if (isColorValue!V &amp;&amp; isLoadeable!T)</code></dt>
+<code class="descname">auto  load(V = real, T)(T loadeable) if (isColorValue!V &amp;&amp; isLoadeable!T)</code></dt>
 <dd><p>Loads a <code class="xref d d-class docutils literal"><span class="pre">Image</span></code> from a given input.</p>
 </dd></dl>
 
 <dl class="daffodil.save">
 <dt>
-<code class="descname">void save(V, T)(const Image!V image, T data) if (isColorValue!V &amp;&amp; isOutRange!T)</code></dt>
+<code class="descname">void save(V = real, T)(const Image!V image, T data) if (isColorValue!V &amp;&amp; isOutRange!T)</code></dt>
 <dt>
-<code class="descname">void save(V)(const Image!V image, string path) if (isColorValue!V)</code></dt>
+<code class="descname">void save(V = real)(const Image!V image, string path) if (isColorValue!V)</code></dt>
 <dt>
-<code class="descname">void save(V, T)(const Image!V image, T saveable) if (isColorValue!V &amp;&amp; isSaveable!T &amp;&amp; !is(T == string))</code></dt>
+<code class="descname">void save(V = real, T)(const Image!V image, T saveable) if (isColorValue!V &amp;&amp; isSaveable!T &amp;&amp; !is(T == string))</code></dt>
 <dd><p>Saves a particular <code class="xref d d-class docutils literal"><span class="pre">Image</span></code> to a given output.</p>
 </dd></dl>
 
@@ -220,9 +222,10 @@ more information.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">daffodil</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="color.html">color</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image.html">image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="meta.html">meta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pixel.html">pixel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colorspace.html">colorspace</a></li>
 <li class="toctree-l2"><a class="reference internal" href="filter/index.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transform/index.html">transform</a></li>
 </ul>
@@ -234,7 +237,7 @@ more information.</p>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="../about.html" title="previous chapter">About</a></li>
-      <li>Next: <a href="color.html" title="next chapter">color</a></li>
+      <li>Next: <a href="image.html" title="next chapter">image</a></li>
   </ul></li>
 </ul>
 </div>
