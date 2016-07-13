@@ -26,11 +26,17 @@ import daffodil.filter;
 import daffodil.transform;
 
 void main() {
+    // daffodil allows you to choose what format pixels are stored with
+    // defaults to `real` for when you don't care about memory usage.
     auto image = load!uint("daffodil.bmp");
 
-    image.gaussianBlurred(1.4).save("blurry_daffodil.bmp");
+    // concise filter usage, with a simple saving API
+    image.gaussianBlurred(1.4)
+         .save("blurry_daffodil.bmp");
 
-    image.flipped!"y".save("upside_down_daffodil.bmp");
+    // easy transformations
+    image.flip!"y";
+    image.save("upside_down_daffodil.bmp");
 }
 ```
 
