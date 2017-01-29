@@ -84,7 +84,7 @@ class ImageRangeObject(R) : MostDerivedImageRange!R if (isImageRange!R) {
 
     // Optimization:  One delegate call is faster than three virtual
     // function calls.  Use opApply for foreach syntax.
-    int opApply(int delegate(E) dg) {
+    int opApply(scope int delegate(E) dg) {
         int res;
 
         foreach (i, e; this) {
@@ -95,7 +95,7 @@ class ImageRangeObject(R) : MostDerivedImageRange!R if (isImageRange!R) {
         return res;
     }
 
-    int opApply(int delegate(size_t, E) dg) {
+    int opApply(scope int delegate(size_t, E) dg) {
         int res;
 
         size_t i = 0;
