@@ -99,7 +99,7 @@ BmpMetaData loadMeta(R)(R data) if (isInputRange!R &&
     }
 
     // Validation
-    alias checkValid = enforce!(InvalidHeader, bool);
+    alias checkValid = enforce!InvalidHeader;
 
     checkValid(dibVersion > DibVersion.CORE || dibHeader.bitCount < 16,
                "Old BMP image header does not support bpp > 8");
